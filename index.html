@@ -1,0 +1,1414 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>香港股票交易流程 - Emoji 可视化</title>
+    <style>
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f5f5f7;
+            --text-primary: #1d1d1f;
+            --text-secondary: #86868b;
+            --accent-blue: #0071e3;
+            --money-green: #34c759;
+            --stock-purple: #5856d6;
+            --orange: #ff9500;
+            --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.08);
+            --shadow-elevated: 0 12px 40px rgba(0, 0, 0, 0.12);
+            --font-stack: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-stack);
+            background: linear-gradient(180deg, #f8f9fa 0%, #e8e9eb 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Hero */
+        .hero {
+            text-align: center;
+            padding: 32px 24px 24px;
+        }
+
+        .hero h1 {
+            font-size: clamp(24px, 4vw, 36px);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 4px;
+        }
+
+        .hero p {
+            font-size: clamp(12px, 1.5vw, 14px);
+            color: var(--text-secondary);
+        }
+
+        /* Main Container */
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 16px 24px;
+        }
+
+        /* Scene Card */
+        .scene-card {
+            background: var(--bg-primary);
+            border-radius: 24px;
+            box-shadow: var(--shadow-card);
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+
+        /* Circle Layout */
+        .circle-scene {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            height: 500px;
+            margin: 0 auto;
+        }
+
+        .circle-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 160px;
+            height: 160px;
+            background: linear-gradient(135deg, #f8f9fa, #ffffff);
+            border-radius: 50%;
+            box-shadow: var(--shadow-elevated);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            border: 3px solid #e5e5e5;
+        }
+
+        .circle-center.phase-1 { border-color: var(--accent-blue); }
+        .circle-center.phase-2 { border-color: var(--orange); }
+        .circle-center.phase-3 { border-color: var(--accent-blue); }
+        .circle-center.phase-4 { border-color: var(--orange); }
+        .circle-center.phase-5 { border-color: #30d158; }
+        .circle-center.phase-6 { border-color: var(--stock-purple); }
+        .circle-center.phase-7 { border-color: var(--money-green); }
+        .circle-center.phase-8 { border-color: var(--stock-purple); }
+        .circle-center.phase-9 { border-color: var(--accent-blue); }
+        .circle-center.phase-10 { border-color: #30d158; }
+
+        .phase-number {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+
+        .phase-title-small {
+            font-size: 18px;
+            font-weight: 700;
+            text-align: center;
+            line-height: 1.3;
+        }
+
+        .phase-emoji {
+            font-size: 32px;
+            margin-top: 8px;
+        }
+
+        /* Entity Positions - 5 entities in circle */
+        .entity {
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 12px 16px;
+            border-radius: 16px;
+            background: var(--bg-primary);
+            border: 2px solid transparent;
+            transition: all 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
+            z-index: 5;
+            min-width: 90px;
+            box-shadow: var(--shadow-card);
+        }
+
+        .entity.active {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.15), var(--shadow-elevated);
+            transform: scale(1.05);
+        }
+
+        .entity.highlight {
+            animation: highlight-pulse 0.6s ease-out;
+        }
+
+        @keyframes highlight-pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.15); box-shadow: 0 0 0 8px rgba(0, 113, 227, 0.2); }
+            100% { transform: scale(1.05); }
+        }
+
+        .entity-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 8px;
+            font-size: 24px;
+            position: relative;
+        }
+
+        .entity-name {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .entity-role {
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        /* Entity positions */
+        .entity-top {
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .entity-top.active {
+            transform: translateX(-50%) scale(1.05);
+        }
+
+        .entity-right {
+            top: 35%;
+            right: 0;
+            transform: translateY(-50%);
+        }
+
+        .entity-right.active {
+            transform: translateY(-50%) scale(1.05);
+        }
+
+        .entity-bottom-right {
+            bottom: 10%;
+            right: 5%;
+        }
+
+        .entity-bottom-right.active {
+            transform: scale(1.05);
+        }
+
+        .entity-bottom-left {
+            bottom: 10%;
+            left: 5%;
+        }
+
+        .entity-bottom-left.active {
+            transform: scale(1.05);
+        }
+
+        .entity-left {
+            top: 35%;
+            left: 0;
+            transform: translateY(-50%);
+        }
+
+        .entity-left.active {
+            transform: translateY(-50%) scale(1.05);
+        }
+
+        /* Entity colors */
+        .entity-broker .entity-icon { background: linear-gradient(135deg, #30d158, #34c759); }
+        .entity-exchange .entity-icon { background: linear-gradient(135deg, #ff9f0a, #ff9500); }
+        .entity-bank .entity-icon { background: linear-gradient(135deg, #5e5ce6, #5856d6); }
+        .entity-custodian .entity-icon { background: linear-gradient(135deg, #bf5af2, #af52de); }
+        .entity-investor .entity-icon { background: linear-gradient(135deg, #0071e3, #00c7be); }
+
+        /* Flying Emoji - Enhanced */
+        .flying-emoji {
+            position: absolute;
+            font-size: 38px;
+            z-index: 100;
+            pointer-events: none;
+            opacity: 1;
+            transition: none;
+            filter: drop-shadow(0 0 12px rgba(0, 113, 227, 0.7)) drop-shadow(0 0 24px rgba(0, 113, 227, 0.4));
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+        }
+
+        .flying-emoji.animate {
+            animation: fly-emoji var(--duration, 2s) ease-in-out forwards;
+        }
+
+        @keyframes fly-emoji {
+            0% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.3);
+            }
+            8% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1.3);
+            }
+            15% {
+                transform: translate(-50%, -50%) scale(1);
+            }
+            85% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+            92% {
+                transform: translate(-50%, -50%) scale(1.2);
+            }
+            100% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(0.8);
+            }
+        }
+
+        /* Trail effect for flying emoji */
+        .flying-emoji::before,
+        .flying-emoji::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: inherit;
+            z-index: -1;
+            animation: trail-pulse var(--duration, 2s) ease-in-out infinite;
+        }
+
+        .flying-emoji::before {
+            left: -15px;
+            opacity: 0.4;
+            transform: scale(0.7);
+        }
+
+        .flying-emoji::after {
+            left: -30px;
+            opacity: 0.2;
+            transform: scale(0.4);
+        }
+
+        @keyframes trail-pulse {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 0.3; }
+        }
+
+        /* Sender pulse effect */
+        @keyframes send-pulse-top {
+            0% { transform: translateX(-50%) scale(1.05); box-shadow: 0 0 0 0 rgba(0, 113, 227, 0.6); }
+            50% { transform: translateX(-50%) scale(1.15); box-shadow: 0 0 0 12px rgba(0, 113, 227, 0); border-color: var(--accent-blue); }
+            100% { transform: translateX(-50%) scale(1.05); box-shadow: 0 0 0 0 rgba(0, 113, 227, 0); }
+        }
+
+        @keyframes send-pulse-right {
+            0% { transform: translateY(-50%) scale(1.05); box-shadow: 0 0 0 0 rgba(0, 113, 227, 0.6); }
+            50% { transform: translateY(-50%) scale(1.15); box-shadow: 0 0 0 12px rgba(0, 113, 227, 0); border-color: var(--accent-blue); }
+            100% { transform: translateY(-50%) scale(1.05); box-shadow: 0 0 0 0 rgba(0, 113, 227, 0); }
+        }
+
+        @keyframes send-pulse-bottom {
+            0% { transform: scale(1.05); box-shadow: 0 0 0 0 rgba(0, 113, 227, 0.6); }
+            50% { transform: scale(1.15); box-shadow: 0 0 0 12px rgba(0, 113, 227, 0); border-color: var(--accent-blue); }
+            100% { transform: scale(1.05); box-shadow: 0 0 0 0 rgba(0, 113, 227, 0); }
+        }
+
+        @keyframes send-pulse-left {
+            0% { transform: translateY(-50%) scale(1.05); box-shadow: 0 0 0 0 rgba(0, 113, 227, 0.6); }
+            50% { transform: translateY(-50%) scale(1.15); box-shadow: 0 0 0 12px rgba(0, 113, 227, 0); border-color: var(--accent-blue); }
+            100% { transform: translateY(-50%) scale(1.05); box-shadow: 0 0 0 0 rgba(0, 113, 227, 0); }
+        }
+
+        .entity.sending {
+            animation-duration: 0.5s;
+            animation-timing-function: ease-out;
+            border-color: var(--accent-blue) !important;
+        }
+
+        .entity-top.sending { animation-name: send-pulse-top; }
+        .entity-right.sending { animation-name: send-pulse-right; }
+        .entity-bottom-right.sending,
+        .entity-bottom-left.sending { animation-name: send-pulse-bottom; }
+        .entity-left.sending { animation-name: send-pulse-left; }
+
+        /* Receiver pulse effect */
+        @keyframes receive-pulse-top {
+            0% { transform: translateX(-50%) scale(1.05); }
+            30% { transform: translateX(-50%) scale(1.3); box-shadow: 0 0 0 16px rgba(255, 149, 0, 0.3); border-color: var(--orange); }
+            60% { transform: translateX(-50%) scale(0.95); }
+            100% { transform: translateX(-50%) scale(1.05); }
+        }
+
+        @keyframes receive-pulse-right {
+            0% { transform: translateY(-50%) scale(1.05); }
+            30% { transform: translateY(-50%) scale(1.3); box-shadow: 0 0 0 16px rgba(255, 149, 0, 0.3); border-color: var(--orange); }
+            60% { transform: translateY(-50%) scale(0.95); }
+            100% { transform: translateY(-50%) scale(1.05); }
+        }
+
+        @keyframes receive-pulse-bottom {
+            0% { transform: scale(1.05); }
+            30% { transform: scale(1.3); box-shadow: 0 0 0 16px rgba(255, 149, 0, 0.3); border-color: var(--orange); }
+            60% { transform: scale(0.95); }
+            100% { transform: scale(1.05); }
+        }
+
+        @keyframes receive-pulse-left {
+            0% { transform: translateY(-50%) scale(1.05); }
+            30% { transform: translateY(-50%) scale(1.3); box-shadow: 0 0 0 16px rgba(255, 149, 0, 0.3); border-color: var(--orange); }
+            60% { transform: translateY(-50%) scale(0.95); }
+            100% { transform: translateY(-50%) scale(1.05); }
+        }
+
+        .entity.receiving {
+            animation-duration: 0.7s;
+            animation-timing-function: ease-out;
+            border-color: var(--orange) !important;
+        }
+
+        .entity-top.receiving { animation-name: receive-pulse-top; }
+        .entity-right.receiving { animation-name: receive-pulse-right; }
+        .entity-bottom-right.receiving,
+        .entity-bottom-left.receiving { animation-name: receive-pulse-bottom; }
+        .entity-left.receiving { animation-name: receive-pulse-left; }
+
+        /* Connection Lines - Enhanced with arrows */
+        .connection-lines {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .connection-line {
+            stroke: #e5e5e5;
+            stroke-width: 2;
+            fill: none;
+            stroke-dasharray: 8, 4;
+        }
+
+        .connection-line.active {
+            stroke: var(--accent-blue);
+            stroke-dasharray: none;
+            stroke-width: 3;
+            animation: line-pulse 1.5s ease-in-out infinite;
+        }
+
+        .connection-line.stock-flow {
+            stroke: var(--stock-purple);
+        }
+
+        .connection-line.money-flow {
+            stroke: var(--money-green);
+        }
+
+        @keyframes line-pulse {
+            0%, 100% { stroke-opacity: 0.3; }
+            50% { stroke-opacity: 1; }
+        }
+
+        /* Flow arrows */
+        .flow-arrow {
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            z-index: 15;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .flow-arrow.active {
+            opacity: 1;
+            animation: arrow-pulse 1s ease-in-out infinite;
+        }
+
+        .flow-arrow svg {
+            width: 100%;
+            height: 100%;
+            fill: var(--accent-blue);
+            filter: drop-shadow(0 0 4px rgba(0, 113, 227, 0.5));
+        }
+
+        .flow-arrow.stock-flow svg {
+            fill: var(--stock-purple);
+        }
+
+        .flow-arrow.money-flow svg {
+            fill: var(--money-green);
+        }
+
+        @keyframes arrow-pulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.2); }
+        }
+
+        /* Phase Panel */
+        .phase-panel {
+            background: var(--bg-primary);
+            border-radius: 20px;
+            box-shadow: var(--shadow-card);
+            padding: 24px;
+        }
+
+        .phase-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .phase-badge {
+            width: 32px;
+            height: 32px;
+            background: var(--accent-blue);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .phase-title {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .phase-description {
+            font-size: 15px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: 16px;
+        }
+
+        /* Current Actions */
+        .current-action {
+            background: linear-gradient(135deg, #f0f0f5, #e8e8ed);
+            border-radius: 12px;
+            padding: 16px;
+        }
+
+        .action-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 10px;
+        }
+
+        .action-list {
+            list-style: none;
+        }
+
+        .action-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 0;
+            font-size: 13px;
+        }
+
+        .action-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .action-dot.sender { background: var(--accent-blue); }
+        .action-dot.receiver { background: var(--orange); }
+
+        /* Flow Legend */
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            padding: 12px;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .legend-emoji {
+            font-size: 16px;
+        }
+
+        /* Control Bar */
+        .control-bar {
+            background: var(--bg-primary);
+            border-radius: 16px;
+            box-shadow: var(--shadow-card);
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .control-btn {
+            width: 40px;
+            height: 40px;
+            border: none;
+            border-radius: 50%;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .control-btn:hover {
+            background: var(--accent-blue);
+            color: white;
+        }
+
+        .control-btn.primary {
+            width: 48px;
+            height: 48px;
+            background: var(--accent-blue);
+            color: white;
+        }
+
+        .control-btn.primary:hover {
+            background: #0066cc;
+            transform: scale(1.05);
+        }
+
+        .control-btn svg {
+            width: 18px;
+            height: 18px;
+            fill: currentColor;
+        }
+
+        /* Speed */
+        .speed-group {
+            display: flex;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            padding: 2px;
+        }
+
+        .speed-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 6px;
+            background: transparent;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            font-family: var(--font-stack);
+        }
+
+        .speed-btn.active {
+            background: var(--accent-blue);
+            color: white;
+        }
+
+        /* Timeline */
+        .timeline {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            flex: 1;
+            justify-content: center;
+            min-width: 200px;
+        }
+
+        .timeline-dot {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: var(--bg-secondary);
+            border: 2px solid #e5e5e5;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: 600;
+            color: #a1a1a6;
+            transition: all 0.3s ease;
+        }
+
+        .timeline-dot.active {
+            background: var(--accent-blue);
+            border-color: var(--accent-blue);
+            color: white;
+        }
+
+        .timeline-dot.past {
+            background: var(--money-green);
+            border-color: var(--money-green);
+            color: white;
+        }
+
+        .timeline-dot:hover {
+            border-color: var(--accent-blue);
+            transform: scale(1.1);
+        }
+
+        .timeline-line {
+            flex: 1;
+            height: 2px;
+            background: #e5e5e5;
+            min-width: 4px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .circle-scene {
+                height: 420px;
+            }
+            .circle-center {
+                width: 130px;
+                height: 130px;
+            }
+            .phase-title-small {
+                font-size: 15px;
+            }
+            .phase-emoji {
+                font-size: 24px;
+            }
+            .entity {
+                min-width: 70px;
+                padding: 8px 10px;
+            }
+            .entity-icon {
+                width: 36px;
+                height: 36px;
+                font-size: 18px;
+            }
+            .entity-name {
+                font-size: 12px;
+            }
+            .entity-role {
+                font-size: 9px;
+            }
+            .flying-emoji {
+                font-size: 22px;
+            }
+            .control-bar {
+                flex-direction: column;
+            }
+            .timeline {
+                order: -1;
+                min-width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .circle-scene {
+                height: 380px;
+            }
+            .circle-center {
+                width: 110px;
+                height: 110px;
+            }
+            .phase-title-small {
+                font-size: 13px;
+            }
+            .phase-emoji {
+                font-size: 20px;
+            }
+            .timeline-dot {
+                width: 22px;
+                height: 22px;
+                font-size: 9px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <section class="hero">
+        <h1>香港股票交易流程</h1>
+        <p>Emoji 可视化演示</p>
+    </section>
+
+    <main class="main-container">
+        <!-- Circle Scene -->
+        <div class="scene-card">
+            <div class="circle-scene" id="circleScene">
+                <!-- Connection Lines -->
+                <svg class="connection-lines" viewBox="0 0 600 500" preserveAspectRatio="xMidYMid meet">
+                    <!-- Lines will be drawn by JS -->
+                </svg>
+
+                <!-- Center Phase Info -->
+                <div class="circle-center" id="circleCenter">
+                    <div class="phase-number" id="phaseNumber">阶段 1</div>
+                    <div class="phase-title-small" id="phaseTitleSmall">下单</div>
+                    <div class="phase-emoji" id="phaseEmoji">📄</div>
+                </div>
+
+                <!-- Entities -->
+                <div class="entity entity-broker entity-top" data-entity="broker">
+                    <div class="entity-icon">🏢</div>
+                    <div class="entity-name">券商</div>
+                    <div class="entity-role">通道服务</div>
+                </div>
+
+                <div class="entity entity-exchange entity-right" data-entity="exchange">
+                    <div class="entity-icon">📊</div>
+                    <div class="entity-name">交易所</div>
+                    <div class="entity-role">撮合成交</div>
+                </div>
+
+                <div class="entity entity-investor entity-bottom-right" data-entity="investor">
+                    <div class="entity-icon">👤</div>
+                    <div class="entity-name">投资者</div>
+                    <div class="entity-role">交易发起</div>
+                </div>
+
+                <div class="entity entity-custodian entity-bottom-left" data-entity="custodian">
+                    <div class="entity-icon">🏦</div>
+                    <div class="entity-name">存管</div>
+                    <div class="entity-role">证券托管</div>
+                </div>
+
+                <div class="entity entity-bank entity-left" data-entity="bank">
+                    <div class="entity-icon">💳</div>
+                    <div class="entity-name">银行</div>
+                    <div class="entity-role">资金托管</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Phase Panel -->
+        <div class="phase-panel">
+            <div class="phase-header">
+                <div class="phase-badge" id="phaseBadge">1</div>
+                <h2 class="phase-title" id="phaseTitle">下单阶段</h2>
+            </div>
+            <p class="phase-description" id="phaseDesc">
+                投资者向券商提交买入或卖出订单指令
+            </p>
+            <div class="current-action">
+                <div class="action-title">当前操作</div>
+                <ul class="action-list" id="actionList">
+                    <li class="action-item">
+                        <span class="action-dot sender"></span>
+                        <span>投资者提交买入/卖出订单</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Legend -->
+        <div class="legend">
+            <div class="legend-item"><span class="legend-emoji">📄</span><span>订单</span></div>
+            <div class="legend-item"><span class="legend-emoji">📈</span><span>股票</span></div>
+            <div class="legend-item"><span class="legend-emoji">💰</span><span>资金</span></div>
+            <div class="legend-item"><span class="legend-emoji">✅</span><span>成交</span></div>
+            <div class="legend-item"><span class="legend-emoji">📋</span><span>清算</span></div>
+            <div class="legend-item"><span class="legend-emoji">🔔</span><span>通知</span></div>
+            <div class="legend-item"><span class="legend-emoji">🎉</span><span>完成</span></div>
+        </div>
+
+        <!-- Control Bar -->
+        <div class="control-bar">
+            <div class="control-group">
+                <button class="control-btn" id="prevBtn" title="上一步">
+                    <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+                </button>
+                <button class="control-btn primary" id="playBtn" title="播放/暂停">
+                    <svg viewBox="0 0 24 24" id="playIcon"><path d="M8 5v14l11-7z"/></svg>
+                    <svg viewBox="0 0 24 24" id="pauseIcon" style="display:none;"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+                </button>
+                <button class="control-btn" id="nextBtn" title="下一步">
+                    <svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+                </button>
+                <button class="control-btn" id="resetBtn" title="重置">
+                    <svg viewBox="0 0 24 24"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>
+                </button>
+            </div>
+
+            <div class="speed-group">
+                <button class="speed-btn" data-speed="1">1x</button>
+                <button class="speed-btn active" data-speed="2">2x</button>
+                <button class="speed-btn" data-speed="3">3x</button>
+            </div>
+
+            <div class="timeline" id="timeline"></div>
+        </div>
+    </main>
+
+    <script>
+        // Emoji types
+        const emojiTypes = {
+            order: '📄',      // 订单
+            stock: '📈',     // 股票
+            money: '💰',     // 金钱
+            done: '✅',      // 成交
+            settle: '📋',    // 清算
+            notify: '🔔',    // 通知
+            complete: '🎉'   // 完成
+        };
+
+        // Entity positions (relative to scene)
+        const entityPositions = {
+            broker: { top: '0%', left: '50%', xPercent: -50, yPercent: 0 },
+            exchange: { top: '35%', left: '100%', xPercent: -100, yPercent: -50 },
+            investor: { top: '85%', left: '85%', xPercent: -85, yPercent: -100 },
+            custodian: { top: '85%', left: '15%', xPercent: -15, yPercent: -100 },
+            bank: { top: '35%', left: '0%', xPercent: 0, yPercent: -50 }
+        };
+
+        // 交易阶段配置
+        const phases = [
+            {
+                id: 1,
+                title: '下单',
+                desc: '投资者向券商提交买入或卖出订单指令',
+                emoji: emojiTypes.order,
+                actions: [
+                    { text: '投资者提交买入/卖出订单', type: 'sender' }
+                ],
+                active: ['investor', 'broker'],
+                flows: [
+                    { from: 'investor', to: 'broker', emoji: '📄', label: '订单' }
+                ]
+            },
+            {
+                id: 2,
+                title: '验证',
+                desc: '券商进行风控检查、资金验证、持仓检查',
+                emoji: '✓',
+                actions: [
+                    { text: '券商检查资金是否充足', type: 'sender' },
+                    { text: '券商检查持仓是否足够', type: 'sender' },
+                    { text: '风控系统审核订单', type: 'sender' }
+                ],
+                active: ['broker'],
+                flows: []
+            },
+            {
+                id: 3,
+                title: '路由',
+                desc: '券商将订单路由到香港交易所',
+                emoji: '📤',
+                actions: [
+                    { text: '券商将订单发送到交易所', type: 'sender' }
+                ],
+                active: ['broker', 'exchange'],
+                flows: [
+                    { from: 'broker', to: 'exchange', emoji: '📄', label: '订单' }
+                ]
+            },
+            {
+                id: 4,
+                title: '撮合',
+                desc: '交易所自动匹配买卖订单',
+                emoji: '⚡',
+                actions: [
+                    { text: '系统查找匹配订单', type: 'sender' },
+                    { text: '价格数量撮合成功', type: 'sender' }
+                ],
+                active: ['exchange'],
+                flows: []
+            },
+            {
+                id: 5,
+                title: '成交',
+                desc: '成交信息返回给券商和投资者',
+                emoji: emojiTypes.done,
+                actions: [
+                    { text: '交易所发送成交报告', type: 'sender' },
+                    { text: '券商通知投资者', type: 'receiver' }
+                ],
+                active: ['exchange', 'broker', 'investor'],
+                flows: [
+                    { from: 'exchange', to: 'broker', emoji: '✅', label: '成交' },
+                    { from: 'broker', to: 'investor', emoji: '🔔', label: '通知' }
+                ]
+            },
+            {
+                id: 6,
+                title: '清算',
+                desc: '清算所(HKSCC)发出清算指令',
+                emoji: emojiTypes.settle,
+                actions: [
+                    { text: 'HKSCC生成清算指令', type: 'sender' },
+                    { text: '指令发送给券商和存管', type: 'receiver' }
+                ],
+                active: ['exchange', 'broker', 'custodian'],
+                flows: [
+                    { from: 'exchange', to: 'custodian', emoji: '📋', label: '清算' },
+                    { from: 'exchange', to: 'broker', emoji: '📋', label: '清算' }
+                ]
+            },
+            {
+                id: 7,
+                title: '资金',
+                desc: 'T+2 银行完成资金划转',
+                emoji: emojiTypes.money,
+                actions: [
+                    { text: '买方银行扣款', type: 'sender' },
+                    { text: '资金划转至卖方', type: 'receiver' }
+                ],
+                active: ['investor', 'broker', 'bank'],
+                flows: [
+                    { from: 'investor', to: 'bank', emoji: '💰', label: '付款' },
+                    { from: 'bank', to: 'broker', emoji: '💰', label: '到账' }
+                ]
+            },
+            {
+                id: 8,
+                title: '证券',
+                desc: 'T+2 存管机构完成证券划转',
+                emoji: emojiTypes.stock,
+                actions: [
+                    { text: '卖方证券过户', type: 'sender' },
+                    { text: '证券登记至买方', type: 'receiver' }
+                ],
+                active: ['investor', 'broker', 'custodian'],
+                flows: [
+                    { from: 'investor', to: 'custodian', emoji: '📈', label: '过户' },
+                    { from: 'custodian', to: 'broker', emoji: '📈', label: '调入' }
+                ]
+            },
+            {
+                id: 9,
+                title: '持仓',
+                desc: '券商更新投资者账户持仓',
+                emoji: '📊',
+                actions: [
+                    { text: '券商更新资金账户', type: 'sender' },
+                    { text: '更新股票持仓', type: 'sender' },
+                    { text: '投资者可查询持仓', type: 'receiver' }
+                ],
+                active: ['broker', 'investor'],
+                flows: [
+                    { from: 'broker', to: 'investor', emoji: '📊', label: '持仓' }
+                ]
+            },
+            {
+                id: 10,
+                title: '完成',
+                desc: 'T+2交割完成，整个交易流程结束',
+                emoji: emojiTypes.complete,
+                actions: [
+                    { text: '资金结算完成', type: 'sender' },
+                    { text: '证券交割完成', type: 'sender' },
+                    { text: '交易流程结束', type: 'receiver' }
+                ],
+                active: ['investor', 'broker', 'exchange', 'bank', 'custodian'],
+                flows: []
+            }
+        ];
+
+        // State
+        let currentPhase = 0;
+        let isPlaying = false;
+        let playTimer = null;
+        let speed = 2;
+
+        // DOM
+        const circleScene = document.getElementById('circleScene');
+        const circleCenter = document.getElementById('circleCenter');
+        const phaseBadge = document.getElementById('phaseBadge');
+        const phaseTitle = document.getElementById('phaseTitle');
+        const phaseTitleSmall = document.getElementById('phaseTitleSmall');
+        const phaseNumber = document.getElementById('phaseNumber');
+        const phaseEmoji = document.getElementById('phaseEmoji');
+        const phaseDesc = document.getElementById('phaseDesc');
+        const actionList = document.getElementById('actionList');
+        const timeline = document.getElementById('timeline');
+        const playBtn = document.getElementById('playBtn');
+        const playIcon = document.getElementById('playIcon');
+        const pauseIcon = document.getElementById('pauseIcon');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const speedBtns = document.querySelectorAll('.speed-btn');
+
+        function init() {
+            drawConnectionLines();
+            createTimeline();
+            updatePhase();
+            setupEvents();
+        }
+
+        function drawConnectionLines() {
+            const svg = document.querySelector('.connection-lines');
+            const entities = ['broker', 'exchange', 'investor', 'custodian', 'bank'];
+            const centerX = 300;
+            const centerY = 250;
+
+            let lines = '';
+
+            // Draw lines between entities in circle order
+            for (let i = 0; i < entities.length; i++) {
+                const from = entities[i];
+                const to = entities[(i + 1) % entities.length];
+                const fromPos = getEntityCenter(from);
+                const toPos = getEntityCenter(to);
+
+                lines += `<line class="connection-line" x1="${fromPos.x}" y1="${fromPos.y}" x2="${toPos.x}" y2="${toPos.y}" />`;
+            }
+
+            // Draw lines to center
+            entities.forEach(e => {
+                const pos = getEntityCenter(e);
+                lines += `<line class="connection-line" x1="${pos.x}" y1="${pos.y}" x2="${centerX}" y2="${centerY}" />`;
+            });
+
+            svg.innerHTML = lines;
+        }
+
+        function getEntityCenter(entityKey) {
+            const entity = document.querySelector(`[data-entity="${entityKey}"]`);
+            const scene = document.getElementById('circleScene');
+            const sceneRect = scene.getBoundingClientRect();
+            const entityRect = entity.getBoundingClientRect();
+
+            return {
+                x: ((entityRect.left + entityRect.width / 2) - sceneRect.left) * (600 / sceneRect.width),
+                y: ((entityRect.top + entityRect.height / 2) - sceneRect.top) * (500 / sceneRect.height)
+            };
+        }
+
+        function getEntityCenterPixels(entityKey) {
+            const entity = document.querySelector(`[data-entity="${entityKey}"]`);
+            const scene = document.getElementById('circleScene');
+            const sceneRect = scene.getBoundingClientRect();
+            const entityRect = entity.getBoundingClientRect();
+
+            return {
+                x: entityRect.left + entityRect.width / 2 - sceneRect.left,
+                y: entityRect.top + entityRect.height / 2 - sceneRect.top
+            };
+        }
+
+        function createTimeline() {
+            timeline.innerHTML = '';
+            phases.forEach((p, i) => {
+                const dot = document.createElement('div');
+                dot.className = 'timeline-dot';
+                dot.textContent = i + 1;
+                dot.onclick = () => goToPhase(i);
+                timeline.appendChild(dot);
+                if (i < phases.length - 1) {
+                    const line = document.createElement('div');
+                    line.className = 'timeline-line';
+                    timeline.appendChild(line);
+                }
+            });
+        }
+
+        function updatePhase() {
+            const phase = phases[currentPhase];
+
+            // Update center
+            circleCenter.className = `circle-center phase-${phase.id}`;
+            phaseNumber.textContent = `阶段 ${phase.id}`;
+            phaseTitleSmall.textContent = phase.title;
+            phaseEmoji.textContent = phase.emoji;
+
+            // Update info
+            phaseBadge.textContent = phase.id;
+            phaseTitle.textContent = phase.title + '阶段';
+            phaseDesc.textContent = phase.desc;
+
+            // Update actions
+            actionList.innerHTML = phase.actions.map(a => `
+                <li class="action-item">
+                    <span class="action-dot ${a.type}"></span>
+                    <span>${a.text}</span>
+                </li>
+            `).join('');
+
+            // Update entities
+            document.querySelectorAll('.entity').forEach(e => {
+                const isActive = phase.active.includes(e.dataset.entity);
+                e.classList.toggle('active', isActive);
+            });
+
+            // Update timeline
+            timeline.querySelectorAll('.timeline-dot').forEach((dot, i) => {
+                dot.classList.remove('active', 'past');
+                if (i < currentPhase) dot.classList.add('past');
+                if (i === currentPhase) dot.classList.add('active');
+            });
+
+            // Animate flows
+            animateFlows(phase.flows);
+        }
+
+        function animateFlows(flows) {
+            // Remove existing flying emojis and arrows
+            document.querySelectorAll('.flying-emoji').forEach(e => e.remove());
+            document.querySelectorAll('.flow-arrow').forEach(e => e.remove());
+
+            // Reset connection lines
+            document.querySelectorAll('.connection-line').forEach(line => {
+                line.classList.remove('active', 'stock-flow', 'money-flow');
+            });
+
+            if (flows.length === 0) return;
+
+            const duration = 2000 / speed; // 2 seconds
+
+            flows.forEach((flow, index) => {
+                setTimeout(() => {
+                    createFlyingEmoji(flow, duration);
+                }, index * (duration * 0.7));
+            });
+        }
+
+        // Send pulse effect on sender
+        function sendPulse(entityKey) {
+            const entity = document.querySelector(`[data-entity="${entityKey}"]`);
+            if (entity) {
+                entity.classList.remove('sending');
+                void entity.offsetWidth; // Trigger reflow
+                entity.classList.add('sending');
+                setTimeout(() => entity.classList.remove('sending'), 500);
+            }
+        }
+
+        // Receive pulse effect on receiver
+        function receivePulse(entityKey) {
+            const entity = document.querySelector(`[data-entity="${entityKey}"]`);
+            if (entity) {
+                entity.classList.remove('receiving');
+                void entity.offsetWidth; // Trigger reflow
+                entity.classList.add('receiving');
+                setTimeout(() => entity.classList.remove('receiving'), 700);
+            }
+        }
+
+        // Determine flow type based on emoji
+        function getFlowType(emoji) {
+            if (emoji === '📈' || emoji === '📋') return 'stock';
+            if (emoji === '💰') return 'money';
+            return 'default';
+        }
+
+        // Create flow arrow indicator
+        function createFlowArrow(fromPos, toPos, flowType) {
+            const midX = (fromPos.x + toPos.x) / 2;
+            const midY = (fromPos.y + toPos.y) / 2;
+
+            const arrow = document.createElement('div');
+            arrow.className = 'flow-arrow';
+
+            if (flowType === 'stock') arrow.classList.add('stock-flow');
+            else if (flowType === 'money') arrow.classList.add('money-flow');
+
+            arrow.innerHTML = `
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/>
+                </svg>
+            `;
+
+            // Calculate rotation angle
+            const angle = Math.atan2(toPos.y - fromPos.y, toPos.x - fromPos.x) * 180 / Math.PI;
+            arrow.style.left = midX + 'px';
+            arrow.style.top = midY + 'px';
+            arrow.style.transform = `translate(-50%, -50%) rotate(${angle}deg)`;
+
+            circleScene.appendChild(arrow);
+
+            // Fade in arrow
+            requestAnimationFrame(() => arrow.classList.add('active'));
+
+            return arrow;
+        }
+
+        function createFlyingEmoji(flow, duration) {
+            const fromPos = getEntityCenterPixels(flow.from);
+            const toPos = getEntityCenterPixels(flow.to);
+            const flowType = getFlowType(flow.emoji);
+
+            // Send pulse on sender first
+            sendPulse(flow.from);
+
+            // Create flow arrow
+            const arrow = createFlowArrow(fromPos, toPos, flowType);
+
+            // Highlight connection line
+            highlightConnectionLine(flow.from, flow.to, flowType);
+
+            const emoji = document.createElement('div');
+            emoji.className = 'flying-emoji';
+            emoji.textContent = flow.emoji;
+            emoji.style.setProperty('--duration', `${duration}ms`);
+
+            // Set glow color based on flow type
+            if (flowType === 'stock') {
+                emoji.style.filter = 'drop-shadow(0 0 12px rgba(88, 86, 214, 0.7)) drop-shadow(0 0 24px rgba(88, 86, 214, 0.4))';
+            } else if (flowType === 'money') {
+                emoji.style.filter = 'drop-shadow(0 0 12px rgba(52, 199, 89, 0.7)) drop-shadow(0 0 24px rgba(52, 199, 89, 0.4))';
+            }
+
+            // Start position
+            emoji.style.left = fromPos.x + 'px';
+            emoji.style.top = fromPos.y + 'px';
+
+            // Calculate midpoint for arc
+            const midX = (fromPos.x + toPos.x) / 2;
+            const midY = Math.min(fromPos.y, toPos.y) - 60;
+
+            // Apply transform with keyframes for arc
+            emoji.style.transform = 'translate(-50%, -50%)';
+
+            // Animate using Web Animations API
+            const animation = emoji.animate([
+                { left: fromPos.x + 'px', top: fromPos.y + 'px', offset: 0 },
+                { left: midX + 'px', top: midY + 'px', offset: 0.5 },
+                { left: toPos.x + 'px', top: toPos.y + 'px', offset: 1 }
+            ], {
+                duration: duration,
+                easing: 'ease-in-out',
+                fill: 'forwards'
+            });
+
+            circleScene.appendChild(emoji);
+
+            // Highlight receiver at end
+            animation.onfinish = () => {
+                // Keep emoji visible briefly
+                setTimeout(() => {
+                    // Receiver pulse effect
+                    receivePulse(flow.to);
+
+                    // Fade out emoji
+                    emoji.style.transition = 'opacity 0.3s ease';
+                    emoji.style.opacity = '0';
+
+                    setTimeout(() => {
+                        emoji.remove();
+                        arrow.remove();
+                    }, 300);
+                }, 500);
+            };
+        }
+
+        function highlightConnectionLine(from, to, flowType) {
+            // Find and highlight the appropriate connection line
+            const lines = document.querySelectorAll('.connection-line');
+            // This is simplified - in production you'd match exact from/to pairs
+            lines.forEach(line => {
+                line.classList.add('active');
+                if (flowType === 'stock') line.classList.add('stock-flow');
+                else if (flowType === 'money') line.classList.add('money-flow');
+            });
+        }
+
+        function goToPhase(index) {
+            currentPhase = Math.max(0, Math.min(index, phases.length - 1));
+            updatePhase();
+        }
+
+        function nextPhase() {
+            if (currentPhase < phases.length - 1) {
+                currentPhase++;
+                updatePhase();
+            } else {
+                pause();
+            }
+        }
+
+        function prevPhase() {
+            if (currentPhase > 0) {
+                currentPhase--;
+                updatePhase();
+            }
+        }
+
+        function play() {
+            if (currentPhase >= phases.length - 1) {
+                currentPhase = 0;
+                updatePhase();
+            }
+            isPlaying = true;
+            playIcon.style.display = 'none';
+            pauseIcon.style.display = 'block';
+            const interval = 3500 / speed; // Extended to 3.5s to allow 2s animation + buffer
+            playTimer = setInterval(nextPhase, interval);
+        }
+
+        function pause() {
+            isPlaying = false;
+            playIcon.style.display = 'block';
+            pauseIcon.style.display = 'none';
+            if (playTimer) clearInterval(playTimer);
+        }
+
+        function togglePlay() {
+            isPlaying ? pause() : play();
+        }
+
+        function reset() {
+            pause();
+            currentPhase = 0;
+            updatePhase();
+        }
+
+        function setSpeed(s) {
+            speed = s;
+            speedBtns.forEach(b => b.classList.toggle('active', parseInt(b.dataset.speed) === speed));
+            if (isPlaying) {
+                pause();
+                play();
+            }
+        }
+
+        function setupEvents() {
+            playBtn.onclick = togglePlay;
+            prevBtn.onclick = prevPhase;
+            nextBtn.onclick = nextPhase;
+            resetBtn.onclick = reset;
+            speedBtns.forEach(b => b.onclick = () => setSpeed(parseInt(b.dataset.speed)));
+
+            document.addEventListener('keydown', e => {
+                if (e.code === 'Space') { e.preventDefault(); togglePlay(); }
+                else if (e.code === 'ArrowRight') nextPhase();
+                else if (e.code === 'ArrowLeft') prevPhase();
+            });
+
+            // Handle resize
+            window.addEventListener('resize', () => {
+                drawConnectionLines();
+            });
+        }
+
+        // Start
+        init();
+    </script>
+</body>
+</html>
