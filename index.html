@@ -103,56 +103,8 @@
             position: relative;
             width: 100%;
             max-width: 600px;
-            height: 500px;
+            height: 450px;
             margin: 0 auto;
-        }
-
-        .circle-center {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 160px;
-            height: 160px;
-            background: linear-gradient(135deg, #f8f9fa, #ffffff);
-            border-radius: 50%;
-            box-shadow: var(--shadow-elevated);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 10;
-            border: 3px solid #e5e5e5;
-        }
-
-        .circle-center.phase-1 { border-color: var(--accent-blue); }
-        .circle-center.phase-2 { border-color: var(--orange); }
-        .circle-center.phase-3 { border-color: var(--accent-blue); }
-        .circle-center.phase-4 { border-color: var(--orange); }
-        .circle-center.phase-5 { border-color: #30d158; }
-        .circle-center.phase-6 { border-color: var(--stock-purple); }
-        .circle-center.phase-7 { border-color: var(--money-green); }
-        .circle-center.phase-8 { border-color: var(--stock-purple); }
-        .circle-center.phase-9 { border-color: var(--accent-blue); }
-        .circle-center.phase-10 { border-color: #30d158; }
-
-        .phase-number {
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--text-secondary);
-            margin-bottom: 4px;
-        }
-
-        .phase-title-small {
-            font-size: 18px;
-            font-weight: 700;
-            text-align: center;
-            line-height: 1.3;
-        }
-
-        .phase-emoji {
-            font-size: 32px;
-            margin-top: 8px;
         }
 
         /* Entity Positions - 5 entities in circle */
@@ -259,12 +211,110 @@
             transform: translateY(-50%) scale(1.05);
         }
 
+        /* New entity positions - Left side (Buy Side) */
+        .entity-left-top {
+            top: 15%;
+            left: 8%;
+        }
+
+        .entity-left-top.active {
+            transform: scale(1.05);
+        }
+
+        .entity-left-middle {
+            top: 45%;
+            left: 5%;
+        }
+
+        .entity-left-middle.active {
+            transform: scale(1.05);
+        }
+
+        .entity-left-bottom {
+            top: 80%;
+            left: 8%;
+        }
+
+        .entity-left-bottom.active {
+            transform: scale(1.05);
+        }
+
+        /* New entity positions - Right side (Sell Side) */
+        .entity-right-top {
+            top: 15%;
+            right: 8%;
+        }
+
+        .entity-right-top.active {
+            transform: scale(1.05);
+        }
+
+        .entity-right-middle {
+            top: 45%;
+            right: 5%;
+        }
+
+        .entity-right-middle.active {
+            transform: scale(1.05);
+        }
+
+        .entity-right-bottom {
+            top: 80%;
+            right: 8%;
+        }
+
+        .entity-right-bottom.active {
+            transform: scale(1.05);
+        }
+
+        /* Top right position for custodian */
+        .entity-top-right {
+            top: 0;
+            right: 15%;
+            transform: translateX(-50%);
+        }
+
+        .entity-top-right.active {
+            transform: translateX(-50%) scale(1.05);
+        }
+
+        /* Middle positions - Exchange and Custodian (vertically centered) */
+        .entity-middle-top {
+            top: 15%;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .entity-middle-top.active {
+            transform: translateX(-50%) scale(1.05);
+        }
+
+        .entity-middle-bottom {
+            top: 45%;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .entity-middle-bottom.active {
+            transform: translateX(-50%) scale(1.05);
+        }
+
         /* Entity colors */
         .entity-broker .entity-icon { background: linear-gradient(135deg, #30d158, #34c759); }
         .entity-exchange .entity-icon { background: linear-gradient(135deg, #ff9f0a, #ff9500); }
         .entity-bank .entity-icon { background: linear-gradient(135deg, #5e5ce6, #5856d6); }
         .entity-custodian .entity-icon { background: linear-gradient(135deg, #bf5af2, #af52de); }
         .entity-investor .entity-icon { background: linear-gradient(135deg, #0071e3, #00c7be); }
+
+        /* Buy Side colors (Green) */
+        .entity-buyer-investor .entity-icon { background: linear-gradient(135deg, #30d158, #34c759); }
+        .entity-buyer-broker .entity-icon { background: linear-gradient(135deg, #32d74b, #30d158); }
+        .entity-buyer-bank .entity-icon { background: linear-gradient(135deg, #64d2ff, #32d2ff); }
+
+        /* Sell Side colors (Red) */
+        .entity-seller-investor .entity-icon { background: linear-gradient(135deg, #ff453a, #ff375f); }
+        .entity-seller-broker .entity-icon { background: linear-gradient(135deg, #ff6961, #ff453a); }
+        .entity-seller-bank .entity-icon { background: linear-gradient(135deg, #ffd60a, #ff9f0a); }
 
         /* Flying Emoji - Enhanced */
         .flying-emoji {
@@ -392,6 +442,34 @@
         .entity-bottom-right.sending,
         .entity-bottom-left.sending { animation-name: send-pulse-bottom; }
         .entity-left.sending { animation-name: send-pulse-left; }
+
+        /* New position classes for send */
+        .entity-left-top.sending,
+        .entity-left-middle.sending,
+        .entity-left-bottom.sending,
+        .entity-right-top.sending,
+        .entity-right-middle.sending,
+        .entity-right-bottom.sending,
+        .entity-top-right.sending,
+        .entity-middle-top.sending,
+        .entity-middle-bottom.sending { animation-name: send-pulse-bottom; }
+
+        /* New position classes for receive */
+        .entity-top.receiving { animation-name: receive-pulse-top; }
+        .entity-right.receiving { animation-name: receive-pulse-right; }
+        .entity-bottom-right.receiving,
+        .entity-bottom-left.receiving { animation-name: receive-pulse-bottom; }
+        .entity-left.receiving { animation-name: receive-pulse-left; }
+
+        .entity-left-top.receiving,
+        .entity-left-middle.receiving,
+        .entity-left-bottom.receiving,
+        .entity-right-top.receiving,
+        .entity-right-middle.receiving,
+        .entity-right-bottom.receiving,
+        .entity-top-right.receiving,
+        .entity-middle-top.receiving,
+        .entity-middle-bottom.receiving { animation-name: receive-pulse-bottom; }
 
         /* Receiver pulse effect */
         @keyframes receive-pulse-top {
@@ -748,16 +826,6 @@
             .circle-scene {
                 height: 420px;
             }
-            .circle-center {
-                width: 130px;
-                height: 130px;
-            }
-            .phase-title-small {
-                font-size: 15px;
-            }
-            .phase-emoji {
-                font-size: 24px;
-            }
             .entity {
                 min-width: 70px;
                 padding: 8px 10px;
@@ -789,16 +857,6 @@
             .circle-scene {
                 height: 380px;
             }
-            .circle-center {
-                width: 110px;
-                height: 110px;
-            }
-            .phase-title-small {
-                font-size: 13px;
-            }
-            .phase-emoji {
-                font-size: 20px;
-            }
             .timeline-dot {
                 width: 22px;
                 height: 22px;
@@ -826,42 +884,55 @@
                     <!-- Lines will be drawn by JS -->
                 </svg>
 
-                <!-- Center Phase Info -->
-                <div class="circle-center" id="circleCenter">
-                    <div class="phase-number" id="phaseNumber">阶段 1</div>
-                    <div class="phase-title-small" id="phaseTitleSmall">下单</div>
-                    <div class="phase-emoji" id="phaseEmoji">📄</div>
+                <!-- Entities: Buy Side (Left) -->
+                <div class="entity entity-buyer-investor entity-left-top" data-entity="buyer-investor">
+                    <div class="entity-icon">👤</div>
+                    <div class="entity-name">买方投资者</div>
+                    <div class="entity-role">买入股票</div>
                 </div>
 
-                <!-- Entities -->
-                <div class="entity entity-broker entity-top" data-entity="broker">
+                <div class="entity entity-buyer-broker entity-left-middle" data-entity="buyer-broker">
                     <div class="entity-icon">🏢</div>
-                    <div class="entity-name">券商</div>
-                    <div class="entity-role">通道服务</div>
+                    <div class="entity-name">买方券商</div>
+                    <div class="entity-role">买方通道</div>
                 </div>
 
-                <div class="entity entity-exchange entity-right" data-entity="exchange">
+                <div class="entity entity-buyer-bank entity-left-bottom" data-entity="buyer-bank">
+                    <div class="entity-icon">💳</div>
+                    <div class="entity-name">买方银行</div>
+                    <div class="entity-role">资金托管(付款)</div>
+                </div>
+
+                <!-- Neutral (Middle) -->
+                <div class="entity entity-exchange entity-middle-top" data-entity="exchange">
                     <div class="entity-icon">📊</div>
                     <div class="entity-name">交易所</div>
                     <div class="entity-role">撮合成交</div>
                 </div>
 
-                <div class="entity entity-investor entity-bottom-right" data-entity="investor">
-                    <div class="entity-icon">👤</div>
-                    <div class="entity-name">投资者</div>
-                    <div class="entity-role">交易发起</div>
-                </div>
-
-                <div class="entity entity-custodian entity-bottom-left" data-entity="custodian">
+                <div class="entity entity-custodian entity-middle-bottom" data-entity="custodian">
                     <div class="entity-icon">🏦</div>
                     <div class="entity-name">存管</div>
                     <div class="entity-role">证券托管</div>
                 </div>
 
-                <div class="entity entity-bank entity-left" data-entity="bank">
+                <!-- Entities: Sell Side (Right) -->
+                <div class="entity entity-seller-broker entity-right-middle" data-entity="seller-broker">
+                    <div class="entity-icon">🏢</div>
+                    <div class="entity-name">卖方券商</div>
+                    <div class="entity-role">卖方通道</div>
+                </div>
+
+                <div class="entity entity-seller-investor entity-right-top" data-entity="seller-investor">
+                    <div class="entity-icon">👤</div>
+                    <div class="entity-name">卖方投资者</div>
+                    <div class="entity-role">卖出股票</div>
+                </div>
+
+                <div class="entity entity-seller-bank entity-right-bottom" data-entity="seller-bank">
                     <div class="entity-icon">💳</div>
-                    <div class="entity-name">银行</div>
-                    <div class="entity-role">资金托管</div>
+                    <div class="entity-name">卖方银行</div>
+                    <div class="entity-role">资金托管(收款)</div>
                 </div>
             </div>
         </div>
@@ -946,11 +1017,17 @@
 
         // Entity positions (relative to scene)
         const entityPositions = {
-            broker: { top: '0%', left: '50%', xPercent: -50, yPercent: 0 },
-            exchange: { top: '35%', left: '100%', xPercent: -100, yPercent: -50 },
-            investor: { top: '85%', left: '85%', xPercent: -85, yPercent: -100 },
-            custodian: { top: '85%', left: '15%', xPercent: -15, yPercent: -100 },
-            bank: { top: '35%', left: '0%', xPercent: 0, yPercent: -50 }
+            // Buy Side (Left)
+            'buyer-investor': { top: '15%', left: '8%', xPercent: 0, yPercent: 0 },
+            'buyer-broker': { top: '45%', left: '5%', xPercent: 0, yPercent: 0 },
+            'buyer-bank': { top: '78%', left: '8%', xPercent: 0, yPercent: 0 },
+            // Neutral (Middle)
+            exchange: { top: '15%', left: '50%', xPercent: -50, yPercent: 0 },
+            custodian: { top: '45%', left: '50%', xPercent: -50, yPercent: 0 },
+            // Sell Side (Right)
+            'seller-broker': { top: '45%', right: '5%', xPercent: 0, yPercent: 0 },
+            'seller-investor': { top: '15%', right: '8%', xPercent: 0, yPercent: 0 },
+            'seller-bank': { top: '78%', right: '8%', xPercent: 0, yPercent: 0 }
         };
 
         // 交易阶段配置
@@ -958,44 +1035,42 @@
             {
                 id: 1,
                 title: '下单',
-                desc: '投资者向券商提交买入或卖出订单指令',
+                desc: '买方投资者向买方券商提交买入订单指令',
                 emoji: emojiTypes.order,
                 actions: [
-                    { text: '投资者提交买入/卖出订单', type: 'sender' }
+                    { text: '买方投资者提交买入订单', type: 'sender' }
                 ],
-                active: ['investor', 'broker'],
+                active: ['buyer-investor', 'buyer-broker'],
                 flows: [
-                    { from: 'investor', to: 'broker', emoji: '📄', label: '订单' }
+                    { from: 'buyer-investor', to: 'buyer-broker', emoji: '📄', label: '买入订单' }
                 ]
             },
             {
                 id: 2,
                 title: '验证',
-                desc: '券商进行风控检查、资金验证、持仓检查',
+                desc: '买方券商进行风控检查、资金验证',
                 emoji: '✓',
                 actions: [
                     { text: '券商检查资金是否充足', type: 'sender' },
-                    { text: '券商检查持仓是否足够', type: 'sender' },
                     { text: '风控系统审核订单', type: 'sender' }
                 ],
-                active: ['broker'],
+                active: ['buyer-broker'],
                 flows: [
-                    { from: 'broker', to: 'broker', emoji: '✓', label: '资金检查' },
-                    { from: 'broker', to: 'broker', emoji: '✓', label: '持仓检查' },
-                    { from: 'broker', to: 'broker', emoji: '✓', label: '风控审核' }
+                    { from: 'buyer-broker', to: 'buyer-broker', emoji: '✓', label: '资金检查' },
+                    { from: 'buyer-broker', to: 'buyer-broker', emoji: '✓', label: '风控审核' }
                 ]
             },
             {
                 id: 3,
                 title: '路由',
-                desc: '券商将订单路由到香港交易所',
+                desc: '买方券商将订单路由到交易所',
                 emoji: '📤',
                 actions: [
-                    { text: '券商将订单发送到交易所', type: 'sender' }
+                    { text: '买方券商将订单发送到交易所', type: 'sender' }
                 ],
-                active: ['broker', 'exchange'],
+                active: ['buyer-broker', 'exchange'],
                 flows: [
-                    { from: 'broker', to: 'exchange', emoji: '📄', label: '订单' }
+                    { from: 'buyer-broker', to: 'exchange', emoji: '📄', label: '订单' }
                 ]
             },
             {
@@ -1016,16 +1091,19 @@
             {
                 id: 5,
                 title: '成交',
-                desc: '成交信息返回给券商和投资者',
+                desc: '成交信息返回给买卖双方券商和投资者',
                 emoji: emojiTypes.done,
                 actions: [
                     { text: '交易所发送成交报告', type: 'sender' },
-                    { text: '券商通知投资者', type: 'receiver' }
+                    { text: '卖方券商通知卖方投资者', type: 'receiver' },
+                    { text: '买方券商通知买方投资者', type: 'receiver' }
                 ],
-                active: ['exchange', 'broker', 'investor'],
+                active: ['exchange', 'buyer-broker', 'seller-broker', 'buyer-investor', 'seller-investor'],
                 flows: [
-                    { from: 'exchange', to: 'broker', emoji: '✅', label: '成交' },
-                    { from: 'broker', to: 'investor', emoji: '🔔', label: '通知' }
+                    { from: 'exchange', to: 'seller-broker', emoji: '✅', label: '成交(卖)' },
+                    { from: 'exchange', to: 'buyer-broker', emoji: '✅', label: '成交(买)' },
+                    { from: 'seller-broker', to: 'seller-investor', emoji: '🔔', label: '通知' },
+                    { from: 'buyer-broker', to: 'buyer-investor', emoji: '🔔', label: '通知' }
                 ]
             },
             {
@@ -1037,10 +1115,11 @@
                     { text: 'HKSCC生成清算指令', type: 'sender' },
                     { text: '指令发送给券商和存管', type: 'receiver' }
                 ],
-                active: ['exchange', 'broker', 'custodian'],
+                active: ['exchange', 'buyer-broker', 'seller-broker', 'custodian'],
                 flows: [
                     { from: 'exchange', to: 'custodian', emoji: '📋', label: '清算' },
-                    { from: 'exchange', to: 'broker', emoji: '📋', label: '清算' }
+                    { from: 'exchange', to: 'buyer-broker', emoji: '📋', label: '清算(买)' },
+                    { from: 'exchange', to: 'seller-broker', emoji: '📋', label: '清算(卖)' }
                 ]
             },
             {
@@ -1050,12 +1129,12 @@
                 emoji: emojiTypes.money,
                 actions: [
                     { text: '买方银行扣款', type: 'sender' },
-                    { text: '资金划转至卖方', type: 'receiver' }
+                    { text: '资金划转至卖方银行', type: 'receiver' }
                 ],
-                active: ['investor', 'broker', 'bank'],
+                active: ['buyer-investor', 'buyer-bank', 'seller-bank'],
                 flows: [
-                    { from: 'investor', to: 'bank', emoji: '💰', label: '付款' },
-                    { from: 'bank', to: 'broker', emoji: '💰', label: '到账' }
+                    { from: 'buyer-investor', to: 'buyer-bank', emoji: '💰', label: '付款' },
+                    { from: 'buyer-bank', to: 'seller-bank', emoji: '💰', label: '划转' }
                 ]
             },
             {
@@ -1067,10 +1146,10 @@
                     { text: '卖方证券过户', type: 'sender' },
                     { text: '证券登记至买方', type: 'receiver' }
                 ],
-                active: ['investor', 'broker', 'custodian'],
+                active: ['seller-investor', 'custodian', 'buyer-investor'],
                 flows: [
-                    { from: 'investor', to: 'custodian', emoji: '📈', label: '过户' },
-                    { from: 'custodian', to: 'broker', emoji: '📈', label: '调入' }
+                    { from: 'seller-investor', to: 'custodian', emoji: '📈', label: '过户' },
+                    { from: 'custodian', to: 'buyer-investor', emoji: '📈', label: '登记' }
                 ]
             },
             {
@@ -1079,15 +1158,15 @@
                 desc: '券商更新投资者账户持仓',
                 emoji: '📊',
                 actions: [
-                    { text: '券商更新资金账户', type: 'sender' },
+                    { text: '买方券商更新资金账户', type: 'sender' },
                     { text: '更新股票持仓', type: 'sender' },
-                    { text: '投资者可查询持仓', type: 'receiver' }
+                    { text: '买方投资者可查询持仓', type: 'receiver' }
                 ],
-                active: ['broker', 'investor'],
+                active: ['buyer-broker', 'buyer-investor'],
                 flows: [
-                    { from: 'broker', to: 'broker', emoji: '📊', label: '更新资金' },
-                    { from: 'broker', to: 'broker', emoji: '📊', label: '更新持仓' },
-                    { from: 'broker', to: 'investor', emoji: '📊', label: '持仓' }
+                    { from: 'buyer-broker', to: 'buyer-broker', emoji: '📊', label: '更新资金' },
+                    { from: 'buyer-broker', to: 'buyer-broker', emoji: '📊', label: '更新持仓' },
+                    { from: 'buyer-broker', to: 'buyer-investor', emoji: '📊', label: '持仓' }
                 ]
             },
             {
@@ -1100,11 +1179,11 @@
                     { text: '证券交割完成', type: 'sender' },
                     { text: '交易流程结束', type: 'receiver' }
                 ],
-                active: ['investor', 'broker', 'exchange', 'bank', 'custodian'],
+                active: ['buyer-investor', 'buyer-broker', 'exchange', 'buyer-bank', 'seller-bank', 'custodian'],
                 flows: [
-                    { from: 'broker', to: 'broker', emoji: '✅', label: '资金结算' },
-                    { from: 'broker', to: 'broker', emoji: '✅', label: '证券交割' },
-                    { from: 'broker', to: 'investor', emoji: '🎉', label: '完成' }
+                    { from: 'buyer-broker', to: 'buyer-broker', emoji: '✅', label: '资金结算' },
+                    { from: 'custodian', to: 'custodian', emoji: '✅', label: '证券交割' },
+                    { from: 'buyer-broker', to: 'buyer-investor', emoji: '🎉', label: '完成' }
                 ]
             }
         ];
@@ -1117,12 +1196,8 @@
 
         // DOM
         const circleScene = document.getElementById('circleScene');
-        const circleCenter = document.getElementById('circleCenter');
         const phaseBadge = document.getElementById('phaseBadge');
         const phaseTitle = document.getElementById('phaseTitle');
-        const phaseTitleSmall = document.getElementById('phaseTitleSmall');
-        const phaseNumber = document.getElementById('phaseNumber');
-        const phaseEmoji = document.getElementById('phaseEmoji');
         const phaseDesc = document.getElementById('phaseDesc');
         const actionList = document.getElementById('actionList');
         const timeline = document.getElementById('timeline');
@@ -1189,12 +1264,6 @@
 
         function updatePhase(runAnimation = true) {
             const phase = phases[currentPhase];
-
-            // Update center
-            circleCenter.className = `circle-center phase-${phase.id}`;
-            phaseNumber.textContent = `阶段 ${phase.id}`;
-            phaseTitleSmall.textContent = phase.title;
-            phaseEmoji.textContent = phase.emoji;
 
             // Update info
             phaseBadge.textContent = phase.id;
