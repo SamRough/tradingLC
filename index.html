@@ -1180,7 +1180,7 @@
 
             if (flows.length === 0) return;
 
-            const duration = 2000 / speed; // 2 seconds
+            const duration = 4000 / speed; // 4 seconds
 
             flows.forEach((flow, index) => {
                 setTimeout(() => {
@@ -1235,8 +1235,8 @@
                 </svg>
             `;
 
-            // Calculate rotation angle
-            const angle = Math.atan2(toPos.y - fromPos.y, toPos.x - fromPos.x) * 180 / Math.PI;
+            // Calculate rotation angle (add 180 degrees to point in correct direction)
+            const angle = (Math.atan2(toPos.y - fromPos.y, toPos.x - fromPos.x) * 180 / Math.PI) + 180;
             arrow.style.left = midX + 'px';
             arrow.style.top = midY + 'px';
             arrow.style.transform = `translate(-50%, -50%) rotate(${angle}deg)`;
@@ -1279,21 +1279,16 @@
             emoji.style.left = fromPos.x + 'px';
             emoji.style.top = fromPos.y + 'px';
 
-            // Calculate midpoint for arc
-            const midX = (fromPos.x + toPos.x) / 2;
-            const midY = Math.min(fromPos.y, toPos.y) - 60;
-
-            // Apply transform with keyframes for arc
+            // Apply transform
             emoji.style.transform = 'translate(-50%, -50%)';
 
-            // Animate using Web Animations API
+            // Animate using Web Animations API (straight line)
             const animation = emoji.animate([
                 { left: fromPos.x + 'px', top: fromPos.y + 'px', offset: 0 },
-                { left: midX + 'px', top: midY + 'px', offset: 0.5 },
                 { left: toPos.x + 'px', top: toPos.y + 'px', offset: 1 }
             ], {
                 duration: duration,
-                easing: 'ease-in-out',
+                easing: 'linear',
                 fill: 'forwards'
             });
 
@@ -1358,7 +1353,7 @@
             isPlaying = true;
             playIcon.style.display = 'none';
             pauseIcon.style.display = 'block';
-            const interval = 3500 / speed; // Extended to 3.5s to allow 2s animation + buffer
+            const interval = 5500 / speed; // Extended to 5.5s to allow 4s animation + buffer
             playTimer = setInterval(nextPhase, interval);
         }
 
