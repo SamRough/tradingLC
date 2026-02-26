@@ -58,13 +58,44 @@
             padding: 0 16px 24px;
         }
 
+        /* Main Content - Two Column Layout */
+        .main-content {
+            display: flex;
+            gap: 24px;
+            align-items: flex-start;
+        }
+
+        .left-column {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .right-column {
+            width: 320px;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* Responsive: Stack on mobile */
+        @media (max-width: 900px) {
+            .main-content {
+                flex-direction: column;
+            }
+            .right-column {
+                width: 100%;
+            }
+        }
+
         /* Scene Card */
         .scene-card {
             background: var(--bg-primary);
             border-radius: 24px;
             box-shadow: var(--shadow-card);
             padding: 24px;
-            margin-bottom: 20px;
         }
 
         /* Circle Layout */
@@ -400,21 +431,26 @@
             stroke-width: 2;
             fill: none;
             stroke-dasharray: 8, 4;
+            opacity: 0;
+            transition: opacity 0.3s ease;
         }
 
         .connection-line.active {
             stroke: var(--accent-blue);
-            stroke-dasharray: none;
-            stroke-width: 3;
+            stroke-dasharray: 8, 4;
+            stroke-width: 2;
+            opacity: 1;
             animation: line-pulse 1.5s ease-in-out infinite;
         }
 
         .connection-line.stock-flow {
             stroke: var(--stock-purple);
+            opacity: 1;
         }
 
         .connection-line.money-flow {
             stroke: var(--money-green);
+            opacity: 1;
         }
 
         @keyframes line-pulse {
@@ -759,8 +795,12 @@
     </section>
 
     <main class="main-container">
-        <!-- Circle Scene -->
-        <div class="scene-card">
+        <!-- Main Content: Two Column Layout -->
+        <div class="main-content">
+            <!-- Left Column: Scene + Controls -->
+            <div class="left-column">
+                <!-- Circle Scene -->
+                <div class="scene-card">
             <div class="circle-scene" id="circleScene">
                 <!-- Connection Lines -->
                 <svg class="connection-lines" viewBox="0 0 600 500" preserveAspectRatio="xMidYMid meet">
@@ -806,7 +846,38 @@
                 </div>
             </div>
         </div>
+        <!-- End scene-card -->
 
+        <!-- Control Bar -->
+        <div class="control-bar">
+            <div class="control-group">
+                <button class="control-btn" id="prevBtn" title="上一步">
+                    <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+                </button>
+                <button class="control-btn primary" id="playBtn" title="播放/暂停">
+                    <svg viewBox="0 0 24 24" id="playIcon"><path d="M8 5v14l11-7z"/></svg>
+                    <svg viewBox="0 0 24 24" id="pauseIcon" style="display:none;"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+                </button>
+                <button class="control-btn" id="nextBtn" title="下一步">
+                    <svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+                </button>
+                <button class="control-btn" id="resetBtn" title="重置">
+                    <svg viewBox="0 0 24 24"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>
+                </button>
+            </div>
+
+            <div class="speed-group">
+                <button class="speed-btn" data-speed="1">1x</button>
+                <button class="speed-btn active" data-speed="2">2x</button>
+            </div>
+
+            <div class="timeline" id="timeline"></div>
+        </div>
+        <!-- End left-column -->
+        </div>
+
+        <!-- Right Column: Phase Panel + Legend -->
+        <div class="right-column">
         <!-- Phase Panel -->
         <div class="phase-panel">
             <div class="phase-header">
@@ -837,33 +908,9 @@
             <div class="legend-item"><span class="legend-emoji">🔔</span><span>通知</span></div>
             <div class="legend-item"><span class="legend-emoji">🎉</span><span>完成</span></div>
         </div>
-
-        <!-- Control Bar -->
-        <div class="control-bar">
-            <div class="control-group">
-                <button class="control-btn" id="prevBtn" title="上一步">
-                    <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
-                </button>
-                <button class="control-btn primary" id="playBtn" title="播放/暂停">
-                    <svg viewBox="0 0 24 24" id="playIcon"><path d="M8 5v14l11-7z"/></svg>
-                    <svg viewBox="0 0 24 24" id="pauseIcon" style="display:none;"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
-                </button>
-                <button class="control-btn" id="nextBtn" title="下一步">
-                    <svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
-                </button>
-                <button class="control-btn" id="resetBtn" title="重置">
-                    <svg viewBox="0 0 24 24"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>
-                </button>
-            </div>
-
-            <div class="speed-group">
-                <button class="speed-btn" data-speed="1">1x</button>
-                <button class="speed-btn active" data-speed="2">2x</button>
-                <button class="speed-btn" data-speed="3">3x</button>
-            </div>
-
-            <div class="timeline" id="timeline"></div>
+        <!-- End right-column -->
         </div>
+        <!-- End main-content -->
     </main>
 
     <script>
@@ -913,7 +960,11 @@
                     { text: '风控系统审核订单', type: 'sender' }
                 ],
                 active: ['broker'],
-                flows: []
+                flows: [
+                    { from: 'broker', to: 'broker', emoji: '✓', label: '资金检查' },
+                    { from: 'broker', to: 'broker', emoji: '✓', label: '持仓检查' },
+                    { from: 'broker', to: 'broker', emoji: '✓', label: '风控审核' }
+                ]
             },
             {
                 id: 3,
@@ -938,7 +989,10 @@
                     { text: '价格数量撮合成功', type: 'sender' }
                 ],
                 active: ['exchange'],
-                flows: []
+                flows: [
+                    { from: 'exchange', to: 'exchange', emoji: '⚡', label: '查找订单' },
+                    { from: 'exchange', to: 'exchange', emoji: '⚡', label: '撮合' }
+                ]
             },
             {
                 id: 5,
@@ -1012,6 +1066,8 @@
                 ],
                 active: ['broker', 'investor'],
                 flows: [
+                    { from: 'broker', to: 'broker', emoji: '📊', label: '更新资金' },
+                    { from: 'broker', to: 'broker', emoji: '📊', label: '更新持仓' },
                     { from: 'broker', to: 'investor', emoji: '📊', label: '持仓' }
                 ]
             },
@@ -1026,7 +1082,11 @@
                     { text: '交易流程结束', type: 'receiver' }
                 ],
                 active: ['investor', 'broker', 'exchange', 'bank', 'custodian'],
-                flows: []
+                flows: [
+                    { from: 'broker', to: 'broker', emoji: '✅', label: '资金结算' },
+                    { from: 'broker', to: 'broker', emoji: '✅', label: '证券交割' },
+                    { from: 'broker', to: 'investor', emoji: '🎉', label: '完成' }
+                ]
             }
         ];
 
@@ -1064,29 +1124,8 @@
 
         function drawConnectionLines() {
             const svg = document.querySelector('.connection-lines');
-            const entities = ['broker', 'exchange', 'investor', 'custodian', 'bank'];
-            const centerX = 300;
-            const centerY = 250;
-
-            let lines = '';
-
-            // Draw lines between entities in circle order
-            for (let i = 0; i < entities.length; i++) {
-                const from = entities[i];
-                const to = entities[(i + 1) % entities.length];
-                const fromPos = getEntityCenter(from);
-                const toPos = getEntityCenter(to);
-
-                lines += `<line class="connection-line" x1="${fromPos.x}" y1="${fromPos.y}" x2="${toPos.x}" y2="${toPos.y}" />`;
-            }
-
-            // Draw lines to center
-            entities.forEach(e => {
-                const pos = getEntityCenter(e);
-                lines += `<line class="connection-line" x1="${pos.x}" y1="${pos.y}" x2="${centerX}" y2="${centerY}" />`;
-            });
-
-            svg.innerHTML = lines;
+            // Clear all lines - only create lines during animation
+            svg.innerHTML = '';
         }
 
         function getEntityCenter(entityKey) {
@@ -1165,27 +1204,29 @@
             });
 
             // Animate flows
-            animateFlows(phase.flows);
+            animateFlows(phase.flows, phase.actions);
         }
 
-        function animateFlows(flows) {
-            // Remove existing flying emojis and arrows
+        function animateFlows(flows, actions) {
+            // Remove existing flying emojis, arrows and connection lines
             document.querySelectorAll('.flying-emoji').forEach(e => e.remove());
             document.querySelectorAll('.flow-arrow').forEach(e => e.remove());
+            document.querySelector('.connection-lines').innerHTML = '';
 
-            // Reset connection lines
-            document.querySelectorAll('.connection-line').forEach(line => {
-                line.classList.remove('active', 'stock-flow', 'money-flow');
-            });
+            if (flows.length === 0 && actions.length === 0) return;
 
-            if (flows.length === 0) return;
+            // Each action gets 3 seconds
+            const actionDuration = 3000 / speed;
+            const totalDuration = actionDuration * actions.length;
 
-            const duration = 4000 / speed; // 4 seconds
+            // Calculate duration per flow
+            const flowCount = flows.length || 1;
+            const duration = totalDuration / flowCount;
 
             flows.forEach((flow, index) => {
                 setTimeout(() => {
                     createFlyingEmoji(flow, duration);
-                }, index * (duration * 0.7));
+                }, index * duration);
             });
         }
 
@@ -1218,37 +1259,6 @@
             return 'default';
         }
 
-        // Create flow arrow indicator
-        function createFlowArrow(fromPos, toPos, flowType) {
-            const midX = (fromPos.x + toPos.x) / 2;
-            const midY = (fromPos.y + toPos.y) / 2;
-
-            const arrow = document.createElement('div');
-            arrow.className = 'flow-arrow';
-
-            if (flowType === 'stock') arrow.classList.add('stock-flow');
-            else if (flowType === 'money') arrow.classList.add('money-flow');
-
-            arrow.innerHTML = `
-                <svg viewBox="0 0 24 24">
-                    <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/>
-                </svg>
-            `;
-
-            // Calculate rotation angle (add 180 degrees to point in correct direction)
-            const angle = (Math.atan2(toPos.y - fromPos.y, toPos.x - fromPos.x) * 180 / Math.PI) + 180;
-            arrow.style.left = midX + 'px';
-            arrow.style.top = midY + 'px';
-            arrow.style.transform = `translate(-50%, -50%) rotate(${angle}deg)`;
-
-            circleScene.appendChild(arrow);
-
-            // Fade in arrow
-            requestAnimationFrame(() => arrow.classList.add('active'));
-
-            return arrow;
-        }
-
         function createFlyingEmoji(flow, duration) {
             const fromPos = getEntityCenterPixels(flow.from);
             const toPos = getEntityCenterPixels(flow.to);
@@ -1256,9 +1266,6 @@
 
             // Send pulse on sender first
             sendPulse(flow.from);
-
-            // Create flow arrow
-            const arrow = createFlowArrow(fromPos, toPos, flowType);
 
             // Highlight connection line
             highlightConnectionLine(flow.from, flow.to, flowType);
@@ -1308,20 +1315,34 @@
                     setTimeout(() => {
                         emoji.remove();
                         arrow.remove();
+                        // Clear connection line after animation
+                        document.querySelector('.connection-lines').innerHTML = '';
                     }, 300);
                 }, 500);
             };
         }
 
         function highlightConnectionLine(from, to, flowType) {
-            // Find and highlight the appropriate connection line
-            const lines = document.querySelectorAll('.connection-line');
-            // This is simplified - in production you'd match exact from/to pairs
-            lines.forEach(line => {
-                line.classList.add('active');
-                if (flowType === 'stock') line.classList.add('stock-flow');
-                else if (flowType === 'money') line.classList.add('money-flow');
-            });
+            const svg = document.querySelector('.connection-lines');
+
+            // Clear previous connection lines
+            svg.innerHTML = '';
+
+            // Create line only between from and to entities
+            const fromPos = getEntityCenter(from);
+            const toPos = getEntityCenter(to);
+
+            const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            line.setAttribute('class', 'connection-line active');
+            line.setAttribute('x1', fromPos.x);
+            line.setAttribute('y1', fromPos.y);
+            line.setAttribute('x2', toPos.x);
+            line.setAttribute('y2', toPos.y);
+
+            if (flowType === 'stock') line.classList.add('stock-flow');
+            else if (flowType === 'money') line.classList.add('money-flow');
+
+            svg.appendChild(line);
         }
 
         function goToPhase(index) {
