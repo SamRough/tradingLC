@@ -276,6 +276,25 @@
             transition: none;
             filter: drop-shadow(0 0 12px rgba(0, 113, 227, 0.7)) drop-shadow(0 0 24px rgba(0, 113, 227, 0.4));
             text-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .flying-emoji .flow-label {
+            position: absolute;
+            bottom: -28px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2px 8px;
+            border-radius: 4px;
+            white-space: nowrap;
+            text-shadow: none;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
         }
 
         .flying-emoji.animate {
@@ -1118,7 +1137,7 @@
         function init() {
             drawConnectionLines();
             createTimeline();
-            updatePhase();
+            updatePhase(false);  // Don't run animation on init, wait for user to click play
             setupEvents();
         }
 
@@ -1168,7 +1187,7 @@
             });
         }
 
-        function updatePhase() {
+        function updatePhase(runAnimation = true) {
             const phase = phases[currentPhase];
 
             // Update center
@@ -1203,8 +1222,10 @@
                 if (i === currentPhase) dot.classList.add('active');
             });
 
-            // Animate flows
-            animateFlows(phase.flows, phase.actions);
+            // Animate flows only if runAnimation is true
+            if (runAnimation) {
+                animateFlows(phase.flows, phase.actions);
+            }
         }
 
         function animateFlows(flows, actions) {
@@ -1274,6 +1295,14 @@
             emoji.className = 'flying-emoji';
             emoji.textContent = flow.emoji;
             emoji.style.setProperty('--duration', `${duration}ms`);
+
+            // Add flow label if available
+            if (flow.label) {
+                const label = document.createElement('div');
+                label.className = 'flow-label';
+                label.textContent = flow.label;
+                emoji.appendChild(label);
+            }
 
             // Set glow color based on flow type
             if (flowType === 'stock') {
