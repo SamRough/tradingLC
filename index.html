@@ -3,20 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>香港股票交易流程 - Emoji 可视化</title>
+    <title>香港股票交易流程 | 金融终端</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-primary: #ffffff;
-            --bg-secondary: #f5f5f7;
-            --text-primary: #1d1d1f;
-            --text-secondary: #86868b;
-            --accent-blue: #0071e3;
-            --money-green: #34c759;
-            --stock-purple: #5856d6;
-            --orange: #ff9500;
-            --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.08);
-            --shadow-elevated: 0 12px 40px rgba(0, 0, 0, 0.12);
-            --font-stack: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", sans-serif;
+            /* Deep Finance Theme - Premium Dark */
+            --bg-primary: #0a0e17;
+            --bg-secondary: #111827;
+            --bg-tertiary: #1a2235;
+            --bg-card: #151d2e;
+            --bg-card-hover: #1c2640;
+
+            /* Text */
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+
+            /* Accent - Gold/Finance */
+            --accent-gold: #d4a853;
+            --accent-gold-light: #e8c87a;
+            --accent-gold-dark: #b8923f;
+            --accent-emerald: #10b981;
+            --accent-rose: #f43f5e;
+            --accent-blue: #3b82f6;
+
+            /* Flow Colors */
+            --flow-stock: #8b5cf6;
+            --flow-money: #10b981;
+            --flow-order: #f59e0b;
+
+            /* Effects */
+            --glow-gold: 0 0 20px rgba(212, 168, 83, 0.3);
+            --glow-emerald: 0 0 20px rgba(16, 185, 129, 0.3);
+            --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.4);
+            --shadow-elevated: 0 12px 40px rgba(0, 0, 0, 0.6);
+
+            /* Borders */
+            --border-subtle: rgba(255, 255, 255, 0.06);
+            --border-active: rgba(212, 168, 83, 0.4);
+
+            /* Typography */
+            --font-display: 'DM Sans', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
         }
 
         * {
@@ -26,106 +56,235 @@
         }
 
         body {
-            font-family: var(--font-stack);
-            background: linear-gradient(180deg, #f8f9fa 0%, #e8e9eb 100%);
+            font-family: var(--font-display);
+            background: var(--bg-primary);
             color: var(--text-primary);
             min-height: 100vh;
             overflow-x: hidden;
+            position: relative;
         }
 
-        /* Hero */
-        .hero {
-            text-align: center;
-            padding: 32px 24px 24px;
+        /* Subtle grid background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                linear-gradient(rgba(212, 168, 83, 0.015) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(212, 168, 83, 0.015) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+            z-index: 0;
         }
 
-        .hero h1 {
-            font-size: clamp(24px, 4vw, 36px);
+        /* Vignette effect */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at center, transparent 0%, rgba(10, 14, 23, 0.5) 100%);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Header */
+        .header {
+            position: relative;
+            z-index: 10;
+            padding: 20px 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border-subtle);
+            background: linear-gradient(180deg, rgba(17, 24, 39, 0.95) 0%, rgba(17, 24, 39, 0.7) 100%);
+            backdrop-filter: blur(10px);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .logo-mark {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, var(--accent-gold) 0%, var(--accent-gold-dark) 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-weight: 700;
+            font-size: 16px;
+            color: var(--bg-primary);
+            box-shadow: var(--glow-gold);
             letter-spacing: -0.02em;
-            margin-bottom: 4px;
         }
 
-        .hero p {
-            font-size: clamp(12px, 1.5vw, 14px);
-            color: var(--text-secondary);
+        .header-title h1 {
+            font-size: 18px;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            color: var(--text-primary);
+        }
+
+        .header-title p {
+            font-size: 11px;
+            color: var(--text-muted);
+            font-family: var(--font-mono);
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-top: 2px;
+        }
+
+        .header-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: var(--font-mono);
+            font-size: 11px;
+            color: var(--text-muted);
+            padding: 8px 14px;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: 6px;
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--accent-emerald);
+            box-shadow: var(--glow-emerald);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
         }
 
         /* Main Container */
         .main-container {
-            max-width: 1200px;
+            position: relative;
+            z-index: 10;
+            max-width: 1380px;
             margin: 0 auto;
-            padding: 0 16px 24px;
+            padding: 24px 32px 32px;
         }
 
         /* Main Content - Two Column Layout */
         .main-content {
-            display: flex;
+            display: grid;
+            grid-template-columns: 1fr 360px;
             gap: 24px;
-            align-items: flex-start;
-        }
-
-        .left-column {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-
-        .right-column {
-            width: 320px;
-            flex-shrink: 0;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-
-        /* Responsive: Stack on mobile */
-        @media (max-width: 900px) {
-            .main-content {
-                flex-direction: column;
-            }
-            .right-column {
-                width: 100%;
-            }
+            align-items: start;
         }
 
         /* Scene Card */
         .scene-card {
-            background: var(--bg-primary);
-            border-radius: 24px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
             box-shadow: var(--shadow-card);
             padding: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .scene-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent-gold), transparent);
+            opacity: 0.4;
+        }
+
+        /* Scene Header */
+        .scene-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .scene-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .scene-info {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            color: var(--text-muted);
         }
 
         /* Circle Layout */
         .circle-scene {
             position: relative;
             width: 100%;
-            max-width: 600px;
-            height: 550px;
-            margin: 0 auto;
+            height: 500px;
+            background: radial-gradient(ellipse at center, rgba(212, 168, 83, 0.03) 0%, transparent 70%);
         }
 
-        /* Entity Positions - 5 entities in circle */
+        /* Entity Styles */
         .entity {
             position: absolute;
             display: flex;
             flex-direction: column;
             align-items: center;
             padding: 12px 16px;
-            border-radius: 16px;
-            background: var(--bg-primary);
-            border: 2px solid transparent;
-            transition: all 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
+            border-radius: 12px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-subtle);
+            transition: all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
             z-index: 5;
-            min-width: 90px;
-            box-shadow: var(--shadow-card);
+            min-width: 94px;
+            cursor: pointer;
+        }
+
+        .entity::before {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            border-radius: 12px;
+            padding: 1px;
+            background: linear-gradient(135deg, transparent 40%, var(--accent-gold) 100%);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .entity:hover {
+            background: var(--bg-card-hover);
+            transform: translateY(-2px);
         }
 
         .entity.active {
-            border-color: var(--accent-blue);
-            box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.15), var(--shadow-elevated);
+            border-color: var(--border-active);
+            background: linear-gradient(135deg, var(--bg-tertiary) 0%, rgba(212, 168, 83, 0.1) 100%);
+            box-shadow: 0 0 30px rgba(212, 168, 83, 0.15);
+        }
+
+        .entity.active::before {
+            opacity: 1;
         }
 
         .entity.highlight {
@@ -134,408 +293,69 @@
 
         @keyframes highlight-pulse {
             0% { transform: scale(1); }
-            50% { transform: scale(1.15); box-shadow: 0 0 0 8px rgba(0, 113, 227, 0.2); }
+            50% { transform: scale(1.1); box-shadow: 0 0 0 8px rgba(212, 168, 83, 0.2); }
             100% { transform: scale(1.05); }
         }
 
         .entity-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
             margin-bottom: 8px;
-            font-size: 24px;
+            font-size: 18px;
             position: relative;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-subtle);
         }
 
         .entity-name {
-            font-size: 14px;
+            font-size: 12px;
             font-weight: 600;
             margin-bottom: 2px;
+            color: var(--text-primary);
+            white-space: nowrap;
         }
 
         .entity-role {
-            font-size: 11px;
-            color: var(--text-secondary);
+            font-size: 9px;
+            color: var(--text-muted);
+            font-family: var(--font-mono);
+            letter-spacing: 0.02em;
         }
 
         /* Entity positions */
-        .entity-top {
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-        }
+        .entity-left-top { top: 5%; left: 3%; }
+        .entity-left-middle { top: 35%; left: 1%; }
+        .entity-left-bottom { top: 65%; left: 3%; }
 
-        .entity-top.active {
-            transform: translateX(-50%) scale(1.05);
-        }
+        .entity-right-top { top: 5%; right: 3%; }
+        .entity-right-middle { top: 35%; right: 1%; }
+        .entity-right-bottom { top: 65%; right: 3%; }
 
-        .entity-right {
-            top: 35%;
-            right: 0;
-            transform: translateY(-50%);
-        }
+        .entity-middle-top { top: 5%; left: 50%; transform: translateX(-50%); }
+        .entity-middle-bottom { top: 35%; left: 50%; transform: translateX(-50%); }
 
-        .entity-right.active {
-            transform: translateY(-50%) scale(1.05);
-        }
-
-        .entity-bottom-right {
-            bottom: 10%;
-            right: 5%;
-        }
-
-        .entity-bottom-right.active {
-            transform: scale(1.05);
-        }
-
-        .entity-bottom-left {
-            bottom: 10%;
-            left: 5%;
-        }
-
-        .entity-bottom-left.active {
-            transform: scale(1.05);
-        }
-
-        .entity-left {
-            top: 35%;
-            left: 0;
-            transform: translateY(-50%);
-        }
-
-        .entity-left.active {
-            transform: translateY(-50%) scale(1.05);
-        }
-
-        /* New entity positions - Left side (Buy Side) */
-        .entity-left-top {
-            top: 10%;
-            left: 5%;
-        }
-
-        .entity-left-top.active {
-            transform: scale(1.05);
-        }
-
-        .entity-left-middle {
-            top: 40%;
-            left: 3%;
-        }
-
-        .entity-left-middle.active {
-            transform: scale(1.05);
-        }
-
-        .entity-left-bottom {
-            top: 70%;
-            left: 5%;
-        }
-
-        .entity-left-bottom.active {
-            transform: scale(1.05);
-        }
-
-        /* New entity positions - Right side (Sell Side) */
-        .entity-right-top {
-            top: 10%;
-            right: 5%;
-        }
-
-        .entity-right-top.active {
-            transform: scale(1.05);
-        }
-
-        .entity-right-middle {
-            top: 40%;
-            right: 3%;
-        }
-
-        .entity-right-middle.active {
-            transform: scale(1.05);
-        }
-
-        .entity-right-bottom {
-            top: 70%;
-            right: 5%;
-        }
-
-        .entity-right-bottom.active {
-            transform: scale(1.05);
-        }
-
-        /* Top right position for custodian */
-        .entity-top-right {
-            top: 0;
-            right: 15%;
-            transform: translateX(-50%);
-        }
-
-        .entity-top-right.active {
-            transform: translateX(-50%) scale(1.05);
-        }
-
-        /* Middle positions - Exchange and Custodian (vertically centered) */
-        .entity-middle-top {
-            top: 10%;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-
-        .entity-middle-top.active {
-            transform: translateX(-50%) scale(1.05);
-        }
-
-        .entity-middle-bottom {
-            top: 40%;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-
+        .entity-middle-top.active,
         .entity-middle-bottom.active {
             transform: translateX(-50%) scale(1.05);
         }
 
-        /* Fix: Also handle entity-exchange and entity-custodian classes when active */
-        .entity-exchange.active {
-            transform: translateX(-50%) scale(1.05);
-        }
-
-        .entity-custodian.active {
-            transform: translateX(-50%) scale(1.05);
-        }
-
         /* Entity colors */
-        .entity-broker .entity-icon { background: linear-gradient(135deg, #30d158, #34c759); }
-        .entity-exchange .entity-icon { background: linear-gradient(135deg, #ff9f0a, #ff9500); }
-        .entity-bank .entity-icon { background: linear-gradient(135deg, #5e5ce6, #5856d6); }
-        .entity-custodian .entity-icon { background: linear-gradient(135deg, #bf5af2, #af52de); }
-        .entity-investor .entity-icon { background: linear-gradient(135deg, #0071e3, #00c7be); }
+        .entity-buyer-investor .entity-icon { background: linear-gradient(135deg, #065f46, #047857); }
+        .entity-buyer-broker .entity-icon { background: linear-gradient(135deg, #047857, #059669); }
+        .entity-buyer-bank .entity-icon { background: linear-gradient(135deg, #0369a1, #0284c7); }
 
-        /* Buy Side colors (Green) */
-        .entity-buyer-investor .entity-icon { background: linear-gradient(135deg, #30d158, #34c759); }
-        .entity-buyer-broker .entity-icon { background: linear-gradient(135deg, #32d74b, #30d158); }
-        .entity-buyer-bank .entity-icon { background: linear-gradient(135deg, #64d2ff, #32d2ff); }
+        .entity-seller-investor .entity-icon { background: linear-gradient(135deg, #9f1239, #be123c); }
+        .entity-seller-broker .entity-icon { background: linear-gradient(135deg, #be123c, #e11d48); }
+        .entity-seller-bank .entity-icon { background: linear-gradient(135deg, #ca8a04, #eab308); }
 
-        /* Sell Side colors (Red) */
-        .entity-seller-investor .entity-icon { background: linear-gradient(135deg, #ff453a, #ff375f); }
-        .entity-seller-broker .entity-icon { background: linear-gradient(135deg, #ff6961, #ff453a); }
-        .entity-seller-bank .entity-icon { background: linear-gradient(135deg, #ffd60a, #ff9f0a); }
+        .entity-exchange .entity-icon { background: linear-gradient(135deg, #7c3aed, #8b5cf6); }
+        .entity-custodian .entity-icon { background: linear-gradient(135deg, #c026d3, #db2777); }
 
-        /* Flying Emoji - Enhanced */
-        .flying-emoji {
-            position: absolute;
-            font-size: 38px;
-            z-index: 100;
-            pointer-events: none;
-            opacity: 1;
-            transition: none;
-            filter: drop-shadow(0 0 12px rgba(0, 113, 227, 0.7)) drop-shadow(0 0 24px rgba(0, 113, 227, 0.4));
-            text-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .flying-emoji .flow-label {
-            position: absolute;
-            bottom: -28px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--text-primary);
-            background: rgba(255, 255, 255, 0.95);
-            padding: 2px 8px;
-            border-radius: 4px;
-            white-space: nowrap;
-            text-shadow: none;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-        }
-
-        .flying-emoji.animate {
-            animation: fly-emoji var(--duration, 2s) ease-in-out forwards;
-        }
-
-        @keyframes fly-emoji {
-            0% {
-                opacity: 0;
-                transform: translate(-50%, -50%) scale(0.3);
-            }
-            8% {
-                opacity: 1;
-                transform: translate(-50%, -50%) scale(1.3);
-            }
-            15% {
-                transform: translate(-50%, -50%) scale(1);
-            }
-            85% {
-                opacity: 1;
-                transform: translate(-50%, -50%) scale(1);
-            }
-            92% {
-                transform: translate(-50%, -50%) scale(1.2);
-            }
-            100% {
-                opacity: 1;
-                transform: translate(-50%, -50%) scale(0.8);
-            }
-        }
-
-        /* Trail effect for flying emoji */
-        .flying-emoji::before,
-        .flying-emoji::after {
-            content: '';
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            background: inherit;
-            z-index: -1;
-            animation: trail-pulse var(--duration, 2s) ease-in-out infinite;
-        }
-
-        .flying-emoji::before {
-            left: -15px;
-            opacity: 0.4;
-            transform: scale(0.7);
-        }
-
-        .flying-emoji::after {
-            left: -30px;
-            opacity: 0.2;
-            transform: scale(0.4);
-        }
-
-        @keyframes trail-pulse {
-            0%, 100% { opacity: 0; }
-            50% { opacity: 0.3; }
-        }
-
-        /* Sender pulse effect */
-        @keyframes send-pulse-top {
-            0% { transform: translateX(-50%) scale(1.05); box-shadow: 0 0 0 0 rgba(0, 113, 227, 0.6); }
-            50% { transform: translateX(-50%) scale(1.15); box-shadow: 0 0 0 12px rgba(0, 113, 227, 0); border-color: var(--accent-blue); }
-            100% { transform: translateX(-50%) scale(1.05); box-shadow: 0 0 0 0 rgba(0, 113, 227, 0); }
-        }
-
-        @keyframes send-pulse-right {
-            0% { transform: translateY(-50%) scale(1.05); box-shadow: 0 0 0 0 rgba(0, 113, 227, 0.6); }
-            50% { transform: translateY(-50%) scale(1.15); box-shadow: 0 0 0 12px rgba(0, 113, 227, 0); border-color: var(--accent-blue); }
-            100% { transform: translateY(-50%) scale(1.05); box-shadow: 0 0 0 0 rgba(0, 113, 227, 0); }
-        }
-
-        @keyframes send-pulse-bottom {
-            0% { transform: scale(1.05); box-shadow: 0 0 0 0 rgba(0, 113, 227, 0.6); }
-            50% { transform: scale(1.15); box-shadow: 0 0 0 12px rgba(0, 113, 227, 0); border-color: var(--accent-blue); }
-            100% { transform: scale(1.05); box-shadow: 0 0 0 0 rgba(0, 113, 227, 0); }
-        }
-
-        @keyframes send-pulse-middle {
-            0% { transform: translateX(-50%) scale(1.05); box-shadow: 0 0 0 0 rgba(0, 113, 227, 0.6); }
-            50% { transform: translateX(-50%) scale(1.15); box-shadow: 0 0 0 12px rgba(0, 113, 227, 0); border-color: var(--accent-blue); }
-            100% { transform: translateX(-50%) scale(1.05); box-shadow: 0 0 0 0 rgba(0, 113, 227, 0); }
-        }
-
-        @keyframes send-pulse-left {
-            0% { transform: translateY(-50%) scale(1.05); box-shadow: 0 0 0 0 rgba(0, 113, 227, 0.6); }
-            50% { transform: translateY(-50%) scale(1.15); box-shadow: 0 0 0 12px rgba(0, 113, 227, 0); border-color: var(--accent-blue); }
-            100% { transform: translateY(-50%) scale(1.05); box-shadow: 0 0 0 0 rgba(0, 113, 227, 0); }
-        }
-
-        .entity.sending {
-            animation-duration: 0.5s;
-            animation-timing-function: ease-out;
-            border-color: var(--accent-blue) !important;
-        }
-
-        .entity-top.sending { animation-name: send-pulse-top; }
-        .entity-right.sending { animation-name: send-pulse-right; }
-        .entity-bottom-right.sending,
-        .entity-bottom-left.sending { animation-name: send-pulse-bottom; }
-        .entity-left.sending { animation-name: send-pulse-left; }
-
-        /* New position classes for send */
-        .entity-left-top.sending,
-        .entity-left-middle.sending,
-        .entity-left-bottom.sending,
-        .entity-right-top.sending,
-        .entity-right-middle.sending,
-        .entity-right-bottom.sending { animation-name: send-pulse-bottom; }
-
-        .entity-middle-top.sending,
-        .entity-middle-bottom.sending,
-        .entity-top-right.sending { animation-name: send-pulse-middle; }
-
-        /* New position classes for receive */
-        .entity-top.receiving { animation-name: receive-pulse-top; }
-        .entity-right.receiving { animation-name: receive-pulse-right; }
-        .entity-bottom-right.receiving,
-        .entity-bottom-left.receiving { animation-name: receive-pulse-bottom; }
-        .entity-left.receiving { animation-name: receive-pulse-left; }
-
-        .entity-left-top.receiving,
-        .entity-left-middle.receiving,
-        .entity-left-bottom.receiving,
-        .entity-right-top.receiving,
-        .entity-right-middle.receiving,
-        .entity-right-bottom.receiving { animation-name: receive-pulse-bottom; }
-
-        .entity-top-right.receiving,
-        .entity-middle-top.receiving,
-        .entity-middle-bottom.receiving { animation-name: receive-pulse-middle; }
-
-        /* Receiver pulse effect */
-        @keyframes receive-pulse-top {
-            0% { transform: translateX(-50%) scale(1.05); }
-            30% { transform: translateX(-50%) scale(1.3); box-shadow: 0 0 0 16px rgba(255, 149, 0, 0.3); border-color: var(--orange); }
-            60% { transform: translateX(-50%) scale(0.95); }
-            100% { transform: translateX(-50%) scale(1.05); }
-        }
-
-        @keyframes receive-pulse-right {
-            0% { transform: translateY(-50%) scale(1.05); }
-            30% { transform: translateY(-50%) scale(1.3); box-shadow: 0 0 0 16px rgba(255, 149, 0, 0.3); border-color: var(--orange); }
-            60% { transform: translateY(-50%) scale(0.95); }
-            100% { transform: translateY(-50%) scale(1.05); }
-        }
-
-        @keyframes receive-pulse-bottom {
-            0% { transform: scale(1.05); }
-            30% { transform: scale(1.3); box-shadow: 0 0 0 16px rgba(255, 149, 0, 0.3); border-color: var(--orange); }
-            60% { transform: scale(0.95); }
-            100% { transform: scale(1.05); }
-        }
-
-        @keyframes receive-pulse-middle {
-            0% { transform: translateX(-50%) scale(1.05); }
-            30% { transform: translateX(-50%) scale(1.3); box-shadow: 0 0 0 16px rgba(255, 149, 0, 0.3); border-color: var(--orange); }
-            60% { transform: translateX(-50%) scale(0.95); }
-            100% { transform: translateX(-50%) scale(1.05); }
-        }
-
-        @keyframes receive-pulse-left {
-            0% { transform: translateY(-50%) scale(1.05); }
-            30% { transform: translateY(-50%) scale(1.3); box-shadow: 0 0 0 16px rgba(255, 149, 0, 0.3); border-color: var(--orange); }
-            60% { transform: translateY(-50%) scale(0.95); }
-            100% { transform: translateY(-50%) scale(1.05); }
-        }
-
-        .entity.receiving {
-            animation-duration: 0.7s;
-            animation-timing-function: ease-out;
-            border-color: var(--orange) !important;
-        }
-
-        .entity-top.receiving { animation-name: receive-pulse-top; }
-        .entity-right.receiving { animation-name: receive-pulse-right; }
-        .entity-bottom-right.receiving,
-        .entity-bottom-left.receiving { animation-name: receive-pulse-bottom; }
-        .entity-left.receiving { animation-name: receive-pulse-left; }
-
-        /* Connection Lines - Enhanced with arrows */
+        /* Connection Lines */
         .connection-lines {
             position: absolute;
             top: 0;
@@ -547,193 +367,113 @@
         }
 
         .connection-line {
-            stroke: #e5e5e5;
-            stroke-width: 2;
+            stroke: rgba(212, 168, 83, 0.15);
+            stroke-width: 1.5;
             fill: none;
-            stroke-dasharray: 8, 4;
-            opacity: 0;
-            transition: opacity 0.3s ease;
+            stroke-dasharray: 6, 4;
+            transition: all 0.3s ease;
         }
 
         .connection-line.active {
-            stroke: var(--accent-blue);
-            stroke-dasharray: 8, 4;
+            stroke: var(--accent-gold);
+            stroke-dasharray: none;
             stroke-width: 2;
-            opacity: 1;
-            animation: line-pulse 1.5s ease-in-out infinite;
+            filter: drop-shadow(0 0 6px rgba(212, 168, 83, 0.5));
         }
 
         .connection-line.stock-flow {
-            stroke: var(--stock-purple);
-            opacity: 1;
+            stroke: var(--flow-stock);
+            filter: drop-shadow(0 0 6px rgba(139, 92, 246, 0.5));
         }
 
         .connection-line.money-flow {
-            stroke: var(--money-green);
-            opacity: 1;
+            stroke: var(--flow-money);
+            filter: drop-shadow(0 0 6px rgba(16, 185, 129, 0.5));
         }
 
-        @keyframes line-pulse {
-            0%, 100% { stroke-opacity: 0.3; }
-            50% { stroke-opacity: 1; }
-        }
-
-        /* Flow arrows */
-        .flow-arrow {
+        /* Flying Emoji */
+        .flying-emoji {
             position: absolute;
-            width: 24px;
-            height: 24px;
-            z-index: 15;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .flow-arrow.active {
-            opacity: 1;
-            animation: arrow-pulse 1s ease-in-out infinite;
-        }
-
-        .flow-arrow svg {
-            width: 100%;
-            height: 100%;
-            fill: var(--accent-blue);
-            filter: drop-shadow(0 0 4px rgba(0, 113, 227, 0.5));
-        }
-
-        .flow-arrow.stock-flow svg {
-            fill: var(--stock-purple);
-        }
-
-        .flow-arrow.money-flow svg {
-            fill: var(--money-green);
-        }
-
-        @keyframes arrow-pulse {
-            0%, 100% { transform: translate(-50%, -50%) scale(1); }
-            50% { transform: translate(-50%, -50%) scale(1.2); }
-        }
-
-        /* Phase Panel */
-        .phase-panel {
-            background: var(--bg-primary);
-            border-radius: 20px;
-            box-shadow: var(--shadow-card);
-            padding: 24px;
-        }
-
-        .phase-header {
+            font-size: 28px;
+            z-index: 100;
+            pointer-events: none;
+            filter: drop-shadow(0 0 12px rgba(212, 168, 83, 0.6));
             display: flex;
+            flex-direction: column;
             align-items: center;
-            gap: 12px;
-            margin-bottom: 16px;
         }
 
-        .phase-badge {
-            width: 32px;
-            height: 32px;
-            background: var(--accent-blue);
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 14px;
-        }
-
-        .phase-title {
-            font-size: 20px;
-            font-weight: 700;
-        }
-
-        .phase-description {
-            font-size: 15px;
-            color: var(--text-secondary);
-            line-height: 1.5;
-            margin-bottom: 16px;
-        }
-
-        /* Current Actions */
-        .current-action {
-            background: linear-gradient(135deg, #f0f0f5, #e8e8ed);
-            border-radius: 12px;
-            padding: 16px;
-        }
-
-        .action-title {
-            font-size: 12px;
+        .flying-emoji .flow-label {
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 10px;
             font-weight: 600;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 10px;
+            color: var(--bg-primary);
+            background: var(--accent-gold);
+            padding: 3px 8px;
+            border-radius: 4px;
+            white-space: nowrap;
+            font-family: var(--font-mono);
+            letter-spacing: 0.02em;
         }
 
-        .action-list {
-            list-style: none;
+        /* Sender/Receiver pulse effects */
+        .entity.sending {
+            animation-duration: 0.5s;
+            animation-timing-function: ease-out;
         }
 
-        .action-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 6px 0;
-            font-size: 13px;
+        @keyframes send-pulse {
+            0% { transform: scale(1.05); }
+            50% { transform: scale(1.15); box-shadow: 0 0 0 12px rgba(59, 130, 246, 0); border-color: var(--accent-blue); }
+            100% { transform: scale(1.05); box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); }
         }
 
-        .action-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            flex-shrink: 0;
+        .entity.sending {
+            border-color: var(--accent-blue) !important;
+            animation-name: send-pulse;
         }
 
-        .action-dot.sender { background: var(--accent-blue); }
-        .action-dot.receiver { background: var(--orange); }
-
-        .action-group {
-            margin-top: 8px;
-            margin-bottom: 2px;
+        .entity.receiving {
+            animation-duration: 0.7s;
+            animation-timing-function: ease-out;
+            border-color: var(--accent-gold) !important;
         }
 
-        .group-label {
-            font-weight: 600;
-            font-size: 13px;
-            color: #333;
+        @keyframes receive-pulse {
+            0% { transform: scale(1.05); }
+            30% { transform: scale(1.2); box-shadow: 0 0 0 12px rgba(212, 168, 83, 0.2); }
+            60% { transform: scale(0.95); }
+            100% { transform: scale(1.05); }
         }
 
-        /* Flow Legend */
-        .legend {
-            display: flex;
-            justify-content: center;
-            gap: 24px;
-            padding: 12px;
-            flex-wrap: wrap;
+        .entity-left-top.receiving,
+        .entity-left-middle.receiving,
+        .entity-left-bottom.receiving,
+        .entity-right-top.receiving,
+        .entity-right-middle.receiving,
+        .entity-right-bottom.receiving {
+            animation-name: receive-pulse;
         }
 
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 12px;
-            color: var(--text-secondary);
-        }
-
-        .legend-emoji {
-            font-size: 16px;
+        .entity-middle-top.receiving,
+        .entity-middle-bottom.receiving {
+            animation-name: receive-pulse;
         }
 
         /* Control Bar */
         .control-bar {
-            background: var(--bg-primary);
-            border-radius: 16px;
-            box-shadow: var(--shadow-card);
-            padding: 12px 20px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 14px 20px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 12px;
-            flex-wrap: wrap;
+            gap: 16px;
+            margin-top: 16px;
         }
 
         .control-group {
@@ -743,12 +483,12 @@
         }
 
         .control-btn {
-            width: 40px;
-            height: 40px;
-            border: none;
-            border-radius: 50%;
-            background: var(--bg-secondary);
-            color: var(--text-primary);
+            width: 38px;
+            height: 38px;
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -757,25 +497,27 @@
         }
 
         .control-btn:hover {
-            background: var(--accent-blue);
-            color: white;
+            background: var(--bg-card-hover);
+            border-color: var(--accent-gold);
+            color: var(--accent-gold);
         }
 
         .control-btn.primary {
-            width: 48px;
-            height: 48px;
-            background: var(--accent-blue);
-            color: white;
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, var(--accent-gold) 0%, var(--accent-gold-dark) 100%);
+            border-color: var(--accent-gold);
+            color: var(--bg-primary);
         }
 
         .control-btn.primary:hover {
-            background: #0066cc;
             transform: scale(1.05);
+            box-shadow: var(--glow-gold);
         }
 
         .control-btn svg {
-            width: 18px;
-            height: 18px;
+            width: 16px;
+            height: 16px;
             fill: currentColor;
         }
 
@@ -784,25 +526,26 @@
             display: flex;
             background: var(--bg-secondary);
             border-radius: 8px;
-            padding: 2px;
+            padding: 3px;
+            border: 1px solid var(--border-subtle);
         }
 
         .speed-btn {
-            padding: 6px 12px;
+            padding: 6px 14px;
             border: none;
             border-radius: 6px;
             background: transparent;
-            color: var(--text-secondary);
+            color: var(--text-muted);
             cursor: pointer;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 500;
             transition: all 0.2s ease;
-            font-family: var(--font-stack);
+            font-family: var(--font-mono);
         }
 
         .speed-btn.active {
-            background: var(--accent-blue);
-            color: white;
+            background: var(--accent-gold);
+            color: var(--bg-primary);
         }
 
         /* Timeline */
@@ -812,256 +555,451 @@
             gap: 3px;
             flex: 1;
             justify-content: center;
-            min-width: 200px;
+            min-width: 260px;
         }
 
         .timeline-dot {
             width: 26px;
             height: 26px;
-            border-radius: 50%;
+            border-radius: 6px;
             background: var(--bg-secondary);
-            border: 2px solid #e5e5e5;
+            border: 1px solid var(--border-subtle);
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 10px;
             font-weight: 600;
-            color: #a1a1a6;
+            font-family: var(--font-mono);
+            color: var(--text-muted);
             transition: all 0.3s ease;
         }
 
         .timeline-dot.active {
-            background: var(--accent-blue);
-            border-color: var(--accent-blue);
-            color: white;
+            background: linear-gradient(135deg, var(--accent-gold) 0%, var(--accent-gold-dark) 100%);
+            border-color: var(--accent-gold);
+            color: var(--bg-primary);
+            box-shadow: var(--glow-gold);
         }
 
         .timeline-dot.past {
-            background: var(--money-green);
-            border-color: var(--money-green);
-            color: white;
+            background: var(--accent-emerald);
+            border-color: var(--accent-emerald);
+            color: var(--bg-primary);
         }
 
         .timeline-dot:hover {
-            border-color: var(--accent-blue);
+            border-color: var(--accent-gold);
             transform: scale(1.1);
         }
 
         .timeline-line {
             flex: 1;
             height: 2px;
-            background: #e5e5e5;
-            min-width: 4px;
+            background: var(--border-subtle);
+            min-width: 6px;
+        }
+
+        /* Right Column */
+        .right-column {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* Phase Panel */
+        .phase-panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .phase-panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 3px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--accent-gold), var(--accent-gold-dark));
+        }
+
+        /* Phase progress bar */
+        .phase-progress {
+            display: flex;
+            gap: 3px;
+            margin-bottom: 16px;
+        }
+
+        .phase-progress-dot {
+            flex: 1;
+            height: 2px;
+            background: var(--border-subtle);
+            border-radius: 1px;
+            transition: all 0.3s ease;
+        }
+
+        .phase-progress-dot.active {
+            background: var(--accent-gold);
+            box-shadow: 0 0 6px rgba(212, 168, 83, 0.5);
+        }
+
+        .phase-progress-dot.past {
+            background: var(--accent-emerald);
+        }
+
+        .phase-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .phase-badge {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--accent-gold) 0%, var(--accent-gold-dark) 100%);
+            color: var(--bg-primary);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 16px;
+            font-family: var(--font-mono);
+            box-shadow: var(--glow-gold);
+        }
+
+        .phase-title-group {
+            flex: 1;
+        }
+
+        .phase-title {
+            font-size: 18px;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+        }
+
+        .phase-number {
+            font-size: 10px;
+            color: var(--text-muted);
+            font-family: var(--font-mono);
+            letter-spacing: 0.1em;
+        }
+
+        .phase-description {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: 16px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        /* Current Actions */
+        .current-action {
+            background: var(--bg-secondary);
+            border-radius: 10px;
+            padding: 14px;
+            border: 1px solid var(--border-subtle);
+        }
+
+        .action-title {
+            font-size: 9px;
+            font-weight: 600;
+            color: var(--accent-gold);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            margin-bottom: 10px;
+            font-family: var(--font-mono);
+        }
+
+        .action-list {
+            list-style: none;
+        }
+
+        .action-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            padding: 6px 0;
+            font-size: 12px;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+
+        .action-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 2px;
+            flex-shrink: 0;
+            margin-top: 4px;
+        }
+
+        .action-dot.sender {
+            background: var(--accent-blue);
+            box-shadow: 0 0 6px rgba(59, 130, 246, 0.5);
+        }
+
+        .action-dot.receiver {
+            background: var(--accent-gold);
+            box-shadow: 0 0 6px rgba(212, 168, 83, 0.5);
+        }
+
+        .action-group {
+            margin-top: 10px;
+            margin-bottom: 2px;
+            padding-top: 10px;
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        .action-group:first-child {
+            margin-top: 0;
+            padding-top: 0;
+            border-top: none;
+        }
+
+        .group-label {
+            font-weight: 600;
+            font-size: 11px;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        /* Legend */
+        .legend {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 14px 18px;
+            display: flex;
+            justify-content: space-between;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 10px;
+            color: var(--text-muted);
+            font-family: var(--font-mono);
+        }
+
+        .legend-emoji {
+            font-size: 12px;
         }
 
         /* Responsive */
-        @media (max-width: 768px) {
-            .circle-scene {
-                height: 480px;
+        @media (max-width: 1100px) {
+            .main-content {
+                grid-template-columns: 1fr;
             }
-            .entity {
-                min-width: 70px;
-                padding: 8px 10px;
-            }
-            .entity-icon {
-                width: 36px;
-                height: 36px;
-                font-size: 18px;
-            }
-            .entity-name {
-                font-size: 12px;
-            }
-            .entity-role {
-                font-size: 9px;
-            }
-            .flying-emoji {
-                font-size: 22px;
-            }
-            .control-bar {
-                flex-direction: column;
-            }
-            .timeline {
+            .right-column {
                 order: -1;
-                min-width: 100%;
             }
         }
 
-        @media (max-width: 480px) {
+        @media (max-width: 768px) {
+            .header {
+                padding: 16px 20px;
+            }
+            .main-container {
+                padding: 16px 20px;
+            }
             .circle-scene {
                 height: 420px;
             }
-            .timeline-dot {
-                width: 22px;
-                height: 22px;
-                font-size: 9px;
+            .entity {
+                min-width: 72px;
+                padding: 8px 10px;
+            }
+            .entity-icon {
+                width: 32px;
+                height: 32px;
+                font-size: 14px;
+            }
+            .entity-name {
+                font-size: 10px;
+            }
+            .entity-role {
+                font-size: 8px;
+            }
+            .control-bar {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            .timeline {
+                order: -1;
+                width: 100%;
             }
         }
     </style>
 </head>
 <body>
-    <section class="hero">
-        <h1>香港股票交易流程</h1>
-        <p>Emoji 可视化演示</p>
-    </section>
+    <header class="header">
+        <div class="header-left">
+            <div class="logo-mark">HK</div>
+            <div class="header-title">
+                <h1>香港股票交易流程</h1>
+                <p>Hong Kong Stock Trading Flow</p>
+            </div>
+        </div>
+        <div class="header-status">
+            <span class="status-dot"></span>
+            <span>系统就绪 SYSTEM READY</span>
+        </div>
+    </header>
 
     <main class="main-container">
-        <!-- Main Content: Two Column Layout -->
         <div class="main-content">
             <!-- Left Column: Scene + Controls -->
             <div class="left-column">
-                <!-- Circle Scene -->
                 <div class="scene-card">
-            <div class="circle-scene" id="circleScene">
-                <!-- Connection Lines -->
-                <svg class="connection-lines" viewBox="0 0 600 500" preserveAspectRatio="xMidYMid meet">
-                    <!-- Lines will be drawn by JS -->
-                </svg>
+                    <div class="scene-header">
+                        <span class="scene-title">交易流程可视化</span>
+                        <span class="scene-info">实时演示</span>
+                    </div>
+                    <div class="circle-scene" id="circleScene">
+                        <!-- Connection Lines -->
+                        <svg class="connection-lines" viewBox="0 0 600 500" preserveAspectRatio="xMidYMid meet">
+                        </svg>
 
-                <!-- Entities: Buy Side (Left) -->
-                <div class="entity entity-buyer-investor entity-left-top" data-entity="buyer-investor">
-                    <div class="entity-icon">👤</div>
-                    <div class="entity-name">买方投资者</div>
-                    <div class="entity-role">买入股票</div>
+                        <!-- Entities: Buy Side (Left) -->
+                        <div class="entity entity-buyer-investor entity-left-top" data-entity="buyer-investor">
+                            <div class="entity-icon">👤</div>
+                            <div class="entity-name">买方投资者</div>
+                            <div class="entity-role">买入股票</div>
+                        </div>
+
+                        <div class="entity entity-buyer-broker entity-left-middle" data-entity="buyer-broker">
+                            <div class="entity-icon">🏢</div>
+                            <div class="entity-name">买方券商</div>
+                            <div class="entity-role">买方通道</div>
+                        </div>
+
+                        <div class="entity entity-buyer-bank entity-left-bottom" data-entity="buyer-bank">
+                            <div class="entity-icon">💳</div>
+                            <div class="entity-name">买方银行</div>
+                            <div class="entity-role">资金托管</div>
+                        </div>
+
+                        <!-- Neutral (Middle) -->
+                        <div class="entity entity-exchange entity-middle-top" data-entity="exchange">
+                            <div class="entity-icon">📊</div>
+                            <div class="entity-name">交易所</div>
+                            <div class="entity-role">撮合成交</div>
+                        </div>
+
+                        <div class="entity entity-custodian entity-middle-bottom" data-entity="custodian">
+                            <div class="entity-icon">🏦</div>
+                            <div class="entity-name">存管</div>
+                            <div class="entity-role">证券托管</div>
+                        </div>
+
+                        <!-- Entities: Sell Side (Right) -->
+                        <div class="entity entity-seller-broker entity-right-middle" data-entity="seller-broker">
+                            <div class="entity-icon">🏢</div>
+                            <div class="entity-name">卖方券商</div>
+                            <div class="entity-role">卖方通道</div>
+                        </div>
+
+                        <div class="entity entity-seller-investor entity-right-top" data-entity="seller-investor">
+                            <div class="entity-icon">👤</div>
+                            <div class="entity-name">卖方投资者</div>
+                            <div class="entity-role">卖出股票</div>
+                        </div>
+
+                        <div class="entity entity-seller-bank entity-right-bottom" data-entity="seller-bank">
+                            <div class="entity-icon">💳</div>
+                            <div class="entity-name">卖方银行</div>
+                            <div class="entity-role">资金托管</div>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="entity entity-buyer-broker entity-left-middle" data-entity="buyer-broker">
-                    <div class="entity-icon">🏢</div>
-                    <div class="entity-name">买方券商</div>
-                    <div class="entity-role">买方通道</div>
+                <!-- Control Bar -->
+                <div class="control-bar">
+                    <div class="control-group">
+                        <button class="control-btn" id="prevBtn" title="上一步">
+                            <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+                        </button>
+                        <button class="control-btn primary" id="playBtn" title="播放/暂停">
+                            <svg viewBox="0 0 24 24" id="playIcon"><path d="M8 5v14l11-7z"/></svg>
+                            <svg viewBox="0 0 24 24" id="pauseIcon" style="display:none;"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+                        </button>
+                        <button class="control-btn" id="nextBtn" title="下一步">
+                            <svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+                        </button>
+                        <button class="control-btn" id="resetBtn" title="重置">
+                            <svg viewBox="0 0 24 24"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>
+                        </button>
+                    </div>
+
+                    <div class="speed-group">
+                        <button class="speed-btn" data-speed="1">1x</button>
+                        <button class="speed-btn active" data-speed="2">2x</button>
+                    </div>
+
+                    <div class="timeline" id="timeline"></div>
+                </div>
+            </div>
+
+            <!-- Right Column: Phase Panel + Legend -->
+            <div class="right-column">
+                <!-- Phase Panel -->
+                <div class="phase-panel">
+                    <div class="phase-progress" id="phaseProgress"></div>
+                    <div class="phase-header">
+                        <div class="phase-badge" id="phaseBadge">1</div>
+                        <div class="phase-title-group">
+                            <h2 class="phase-title" id="phaseTitle">下单阶段</h2>
+                            <div class="phase-number">PHASE <span id="phaseNumber">01</span> / 10</div>
+                        </div>
+                    </div>
+                    <p class="phase-description" id="phaseDesc">
+                        买卖双方投资者分别向各自的券商提交订单指令
+                    </p>
+                    <div class="current-action">
+                        <div class="action-title">当前操作 Current Actions</div>
+                        <ul class="action-list" id="actionList">
+                            <li class="action-item">
+                                <span class="action-dot sender"></span>
+                                <span>投资者提交买入/卖出订单</span>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
 
-                <div class="entity entity-buyer-bank entity-left-bottom" data-entity="buyer-bank">
-                    <div class="entity-icon">💳</div>
-                    <div class="entity-name">买方银行</div>
-                    <div class="entity-role">资金托管(付款)</div>
-                </div>
-
-                <!-- Neutral (Middle) -->
-                <div class="entity entity-exchange entity-middle-top" data-entity="exchange">
-                    <div class="entity-icon">📊</div>
-                    <div class="entity-name">交易所</div>
-                    <div class="entity-role">撮合成交</div>
-                </div>
-
-                <div class="entity entity-custodian entity-middle-bottom" data-entity="custodian">
-                    <div class="entity-icon">🏦</div>
-                    <div class="entity-name">存管</div>
-                    <div class="entity-role">证券托管</div>
-                </div>
-
-                <!-- Entities: Sell Side (Right) -->
-                <div class="entity entity-seller-broker entity-right-middle" data-entity="seller-broker">
-                    <div class="entity-icon">🏢</div>
-                    <div class="entity-name">卖方券商</div>
-                    <div class="entity-role">卖方通道</div>
-                </div>
-
-                <div class="entity entity-seller-investor entity-right-top" data-entity="seller-investor">
-                    <div class="entity-icon">👤</div>
-                    <div class="entity-name">卖方投资者</div>
-                    <div class="entity-role">卖出股票</div>
-                </div>
-
-                <div class="entity entity-seller-bank entity-right-bottom" data-entity="seller-bank">
-                    <div class="entity-icon">💳</div>
-                    <div class="entity-name">卖方银行</div>
-                    <div class="entity-role">资金托管(收款)</div>
+                <!-- Legend -->
+                <div class="legend">
+                    <div class="legend-item"><span class="legend-emoji">📄</span><span>订单</span></div>
+                    <div class="legend-item"><span class="legend-emoji">📈</span><span>股票</span></div>
+                    <div class="legend-item"><span class="legend-emoji">💰</span><span>资金</span></div>
+                    <div class="legend-item"><span class="legend-emoji">✅</span><span>成交</span></div>
+                    <div class="legend-item"><span class="legend-emoji">📋</span><span>清算</span></div>
+                    <div class="legend-item"><span class="legend-emoji">🔔</span><span>通知</span></div>
+                    <div class="legend-item"><span class="legend-emoji">🎉</span><span>完成</span></div>
                 </div>
             </div>
         </div>
-        <!-- End scene-card -->
-
-        <!-- Control Bar -->
-        <div class="control-bar">
-            <div class="control-group">
-                <button class="control-btn" id="prevBtn" title="上一步">
-                    <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
-                </button>
-                <button class="control-btn primary" id="playBtn" title="播放/暂停">
-                    <svg viewBox="0 0 24 24" id="playIcon"><path d="M8 5v14l11-7z"/></svg>
-                    <svg viewBox="0 0 24 24" id="pauseIcon" style="display:none;"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
-                </button>
-                <button class="control-btn" id="nextBtn" title="下一步">
-                    <svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
-                </button>
-                <button class="control-btn" id="resetBtn" title="重置">
-                    <svg viewBox="0 0 24 24"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>
-                </button>
-            </div>
-
-            <div class="speed-group">
-                <button class="speed-btn" data-speed="1">1x</button>
-                <button class="speed-btn active" data-speed="2">2x</button>
-            </div>
-
-            <div class="timeline" id="timeline"></div>
-        </div>
-        <!-- End left-column -->
-        </div>
-
-        <!-- Right Column: Phase Panel + Legend -->
-        <div class="right-column">
-        <!-- Phase Panel -->
-        <div class="phase-panel">
-            <div class="phase-header">
-                <div class="phase-badge" id="phaseBadge">1</div>
-                <h2 class="phase-title" id="phaseTitle">下单阶段</h2>
-            </div>
-            <p class="phase-description" id="phaseDesc">
-                投资者向券商提交买入或卖出订单指令
-            </p>
-            <div class="current-action">
-                <div class="action-title">当前操作</div>
-                <ul class="action-list" id="actionList">
-                    <li class="action-item">
-                        <span class="action-dot sender"></span>
-                        <span>投资者提交买入/卖出订单</span>
-                    </li>
-                </ul>
-            </div>
-        </div>
-
-        <!-- Legend -->
-        <div class="legend">
-            <div class="legend-item"><span class="legend-emoji">📄</span><span>订单</span></div>
-            <div class="legend-item"><span class="legend-emoji">📈</span><span>股票</span></div>
-            <div class="legend-item"><span class="legend-emoji">💰</span><span>资金</span></div>
-            <div class="legend-item"><span class="legend-emoji">✅</span><span>成交</span></div>
-            <div class="legend-item"><span class="legend-emoji">📋</span><span>清算</span></div>
-            <div class="legend-item"><span class="legend-emoji">🔔</span><span>通知</span></div>
-            <div class="legend-item"><span class="legend-emoji">🎉</span><span>完成</span></div>
-        </div>
-        <!-- End right-column -->
-        </div>
-        <!-- End main-content -->
     </main>
 
     <script>
         // Emoji types
         const emojiTypes = {
-            order: '📄',      // 订单
-            stock: '📈',     // 股票
-            money: '💰',     // 金钱
-            done: '✅',      // 成交
-            settle: '📋',    // 清算
-            notify: '🔔',    // 通知
-            complete: '🎉'   // 完成
-        };
-
-        // Entity positions (relative to scene)
-        const entityPositions = {
-            // Buy Side (Left)
-            'buyer-investor': { top: '10%', left: '5%', xPercent: 0, yPercent: 0 },
-            'buyer-broker': { top: '40%', left: '3%', xPercent: 0, yPercent: 0 },
-            'buyer-bank': { top: '70%', left: '5%', xPercent: 0, yPercent: 0 },
-            // Neutral (Middle)
-            exchange: { top: '10%', left: '50%', xPercent: -50, yPercent: 0 },
-            custodian: { top: '40%', left: '50%', xPercent: -50, yPercent: 0 },
-            // Sell Side (Right)
-            'seller-broker': { top: '40%', right: '3%', xPercent: 0, yPercent: 0 },
-            'seller-investor': { top: '10%', right: '5%', xPercent: 0, yPercent: 0 },
-            'seller-bank': { top: '70%', right: '5%', xPercent: 0, yPercent: 0 }
+            order: '📄',
+            stock: '📈',
+            money: '💰',
+            done: '✅',
+            settle: '📋',
+            notify: '🔔',
+            complete: '🎉'
         };
 
         // 交易阶段配置
@@ -1069,48 +1007,56 @@
             {
                 id: 1,
                 title: '下单',
-                desc: '买方投资者向买方券商提交买入订单指令',
+                desc: '买卖双方投资者分别向各自的券商提交订单指令',
                 emoji: emojiTypes.order,
                 actions: [
-                    { text: '买方投资者提交买入订单', type: 'sender' }
+                    { text: '买方投资者提交买入订单', type: 'sender', group: 'buyer' },
+                    { text: '卖方投资者提交卖出订单', type: 'sender', group: 'seller' }
                 ],
-                active: ['buyer-investor', 'buyer-broker'],
+                active: ['buyer-investor', 'buyer-broker', 'seller-investor', 'seller-broker'],
                 flows: [
-                    { from: 'buyer-investor', to: 'buyer-broker', emoji: '📄', label: '买入订单' }
+                    { from: 'buyer-investor', to: 'buyer-broker', emoji: '📄', label: '买入订单' },
+                    { from: 'seller-investor', to: 'seller-broker', emoji: '📄', label: '卖出订单' }
                 ]
             },
             {
                 id: 2,
                 title: '验证',
-                desc: '买方券商进行风控检查、资金验证',
+                desc: '买卖双方券商分别进行风控检查和验证',
                 emoji: '✓',
                 actions: [
-                    { text: '券商验证买入订单信息完整性', type: 'sender' },
-                    { text: '检查资金是否充足', type: 'sender' },
-                    { text: '风控系统审核订单合规性', type: 'sender' },
-                    { text: '检查持仓是否超限', type: 'sender' }
+                    { text: '券商验证买入订单信息完整性', type: 'sender', group: 'buyer' },
+                    { text: '检查资金是否充足', type: 'sender', group: 'buyer' },
+                    { text: '风控系统审核订单合规性', type: 'sender', group: 'buyer' },
+                    { text: '券商验证卖出订单信息完整性', type: 'sender', group: 'seller' },
+                    { text: '检查持仓是否充足', type: 'sender', group: 'seller' },
+                    { text: '风控系统审核订单合规性', type: 'sender', group: 'seller' }
                 ],
-                active: ['buyer-broker'],
+                active: ['buyer-broker', 'seller-broker'],
                 flows: [
                     { from: 'buyer-broker', to: 'buyer-broker', emoji: '✓', label: '订单验证' },
                     { from: 'buyer-broker', to: 'buyer-broker', emoji: '✓', label: '资金检查' },
                     { from: 'buyer-broker', to: 'buyer-broker', emoji: '✓', label: '风控审核' },
-                    { from: 'buyer-broker', to: 'buyer-broker', emoji: '✓', label: '持仓检查' }
+                    { from: 'seller-broker', to: 'seller-broker', emoji: '✓', label: '订单验证' },
+                    { from: 'seller-broker', to: 'seller-broker', emoji: '✓', label: '持仓检查' },
+                    { from: 'seller-broker', to: 'seller-broker', emoji: '✓', label: '风控审核' }
                 ]
             },
             {
                 id: 3,
                 title: '路由',
-                desc: '买方券商将订单路由到交易所',
+                desc: '买卖双方券商分别将订单路由到交易所',
                 emoji: '📤',
                 actions: [
-                    { text: '买方券商将订单发送到交易所', type: 'sender' },
-                    { text: '交易所接收并确认订单', type: 'receiver' },
-                    { text: '订单进入撮合队列', type: 'receiver' }
+                    { text: '买方券商将订单发送到交易所', type: 'sender', group: 'buyer' },
+                    { text: '卖方券商将订单发送到交易所', type: 'sender', group: 'seller' },
+                    { text: '交易所接收并确认订单', type: 'receiver', group: 'all' },
+                    { text: '订单进入撮合队列', type: 'receiver', group: 'all' }
                 ],
-                active: ['buyer-broker', 'exchange'],
+                active: ['buyer-broker', 'seller-broker', 'exchange'],
                 flows: [
-                    { from: 'buyer-broker', to: 'exchange', emoji: '📄', label: '订单' },
+                    { from: 'buyer-broker', to: 'exchange', emoji: '📄', label: '买入订单' },
+                    { from: 'seller-broker', to: 'exchange', emoji: '📄', label: '卖出订单' },
                     { from: 'exchange', to: 'exchange', emoji: '✓', label: '确认' },
                     { from: 'exchange', to: 'exchange', emoji: '📋', label: '队列' }
                 ]
@@ -1121,7 +1067,7 @@
                 desc: '交易所自动匹配买卖订单',
                 emoji: '⚡',
                 actions: [
-                    { text: '系统查找匹配的卖出订单', type: 'sender' },
+                    { text: '系统查找匹配的买卖订单', type: 'sender' },
                     { text: '确认价格和数量匹配', type: 'sender' },
                     { text: '生成成交记录', type: 'receiver' },
                     { text: '更新订单状态为已成交', type: 'receiver' }
@@ -1157,10 +1103,10 @@
             {
                 id: 6,
                 title: '清算',
-                desc: '清算所(HKSCC)发出清算指令',
+                desc: 'HKSCC作为中央对手方发出T+2清算指令，券商接收并确认清算信息',
                 emoji: emojiTypes.settle,
                 actions: [
-                    { text: 'HKSCC生成清算指令', type: 'sender', group: 'all' },
+                    { text: 'HKSCC生成并发出T+2清算指令', type: 'sender', group: 'all' },
                     { text: '买方券商接收清算指令', type: 'receiver', group: 'buyer' },
                     { text: '卖方券商接收清算指令', type: 'receiver', group: 'seller' },
                     { text: '存管机构接收清算指令', type: 'receiver', group: 'all' },
@@ -1178,20 +1124,22 @@
             {
                 id: 7,
                 title: '资金',
-                desc: 'T+2 银行完成资金划转',
+                desc: 'T+2资金清算：券商向银行发扣款指令，资金经清算系统划转后到账',
                 emoji: emojiTypes.money,
                 actions: [
-                    { text: '买方投资者授权扣款', type: 'sender', group: 'buyer' },
-                    { text: '买方银行扣款', type: 'sender', group: 'buyer' },
-                    { text: '资金划转至卖方银行', type: 'receiver', group: 'all' },
-                    { text: '卖方银行通知卖方投资者款项已到账', type: 'sender', group: 'seller' }
+                    { text: 'HKSCC发出T+2资金清算指令', type: 'sender', group: 'all' },
+                    { text: '买方券商向买方银行发出扣款指令', type: 'sender', group: 'buyer' },
+                    { text: '买方银行执行扣款', type: 'sender', group: 'buyer' },
+                    { text: '资金通过清算系统从买方券商划转至卖方券商', type: 'receiver', group: 'all' },
+                    { text: '卖方券商增加卖方投资者保证金账户', type: 'receiver', group: 'seller' },
+                    { text: '卖方券商通知卖方投资者资金已到账', type: 'sender', group: 'seller' }
                 ],
-                active: ['buyer-investor', 'buyer-bank', 'seller-bank', 'seller-investor'],
+                active: ['buyer-broker', 'buyer-bank', 'seller-broker', 'seller-investor'],
                 flows: [
-                    { from: 'buyer-investor', to: 'buyer-bank', emoji: '💳', label: '授权' },
-                    { from: 'buyer-investor', to: 'buyer-bank', emoji: '💰', label: '付款' },
-                    { from: 'buyer-bank', to: 'seller-bank', emoji: '💰', label: '划转' },
-                    { from: 'seller-bank', to: 'seller-investor', emoji: '🔔', label: '到账' }
+                    { from: 'buyer-broker', to: 'buyer-bank', emoji: '💳', label: '扣款指令' },
+                    { from: 'buyer-bank', to: 'buyer-broker', emoji: '💰', label: '扣款' },
+                    { from: 'buyer-broker', to: 'seller-broker', emoji: '💰', label: '清算划转' },
+                    { from: 'seller-broker', to: 'seller-investor', emoji: '🔔', label: '到账通知' }
                 ]
             },
             {
@@ -1270,9 +1218,11 @@
         const circleScene = document.getElementById('circleScene');
         const phaseBadge = document.getElementById('phaseBadge');
         const phaseTitle = document.getElementById('phaseTitle');
+        const phaseNumber = document.getElementById('phaseNumber');
         const phaseDesc = document.getElementById('phaseDesc');
         const actionList = document.getElementById('actionList');
         const timeline = document.getElementById('timeline');
+        const phaseProgress = document.getElementById('phaseProgress');
         const playBtn = document.getElementById('playBtn');
         const playIcon = document.getElementById('playIcon');
         const pauseIcon = document.getElementById('pauseIcon');
@@ -1282,40 +1232,10 @@
         const speedBtns = document.querySelectorAll('.speed-btn');
 
         function init() {
-            drawConnectionLines();
             createTimeline();
-            updatePhase(false);  // Don't run animation on init, wait for user to click play
+            createPhaseProgress();
+            updatePhase(false);
             setupEvents();
-        }
-
-        function drawConnectionLines() {
-            const svg = document.querySelector('.connection-lines');
-            // Clear all lines - only create lines during animation
-            svg.innerHTML = '';
-        }
-
-        function getEntityCenter(entityKey) {
-            const entity = document.querySelector(`[data-entity="${entityKey}"]`);
-            const scene = document.getElementById('circleScene');
-            const sceneRect = scene.getBoundingClientRect();
-            const entityRect = entity.getBoundingClientRect();
-
-            return {
-                x: ((entityRect.left + entityRect.width / 2) - sceneRect.left) * (600 / sceneRect.width),
-                y: ((entityRect.top + entityRect.height / 2) - sceneRect.top) * (500 / sceneRect.height)
-            };
-        }
-
-        function getEntityCenterPixels(entityKey) {
-            const entity = document.querySelector(`[data-entity="${entityKey}"]`);
-            const scene = document.getElementById('circleScene');
-            const sceneRect = scene.getBoundingClientRect();
-            const entityRect = entity.getBoundingClientRect();
-
-            return {
-                x: entityRect.left + entityRect.width / 2 - sceneRect.left,
-                y: entityRect.top + entityRect.height / 2 - sceneRect.top
-            };
         }
 
         function createTimeline() {
@@ -1334,18 +1254,40 @@
             });
         }
 
+        function createPhaseProgress() {
+            phaseProgress.innerHTML = '';
+            phases.forEach((p, i) => {
+                const dot = document.createElement('div');
+                dot.className = 'phase-progress-dot';
+                dot.id = `progress-${i}`;
+                phaseProgress.appendChild(dot);
+            });
+        }
+
+        function updatePhaseProgress() {
+            phases.forEach((p, i) => {
+                const dot = document.getElementById(`progress-${i}`);
+                dot.classList.remove('active', 'past');
+                if (i < currentPhase) dot.classList.add('past');
+                if (i === currentPhase) dot.classList.add('active');
+            });
+        }
+
         function updatePhase(runAnimation = true) {
             const phase = phases[currentPhase];
 
             // Update info
             phaseBadge.textContent = phase.id;
             phaseTitle.textContent = phase.title + '阶段';
+            phaseNumber.textContent = String(phase.id).padStart(2, '0');
             phaseDesc.textContent = phase.desc;
+
+            // Update progress
+            updatePhaseProgress();
 
             // Update actions
             const hasGroups = phase.actions.some(a => a.group);
             if (hasGroups) {
-                // Group actions by group property
                 const groups = { buyer: [], seller: [], all: [] };
                 phase.actions.forEach(a => {
                     const g = a.group || 'all';
@@ -1354,7 +1296,7 @@
 
                 let html = '';
                 if (groups.buyer.length > 0) {
-                    html += '<li class="action-group"><span class="group-label">买方：</span></li>';
+                    html += '<li class="action-group"><span class="group-label">买方</span></li>';
                     html += groups.buyer.map(a => `
                         <li class="action-item">
                             <span class="action-dot ${a.type}"></span>
@@ -1363,7 +1305,7 @@
                     `).join('');
                 }
                 if (groups.seller.length > 0) {
-                    html += '<li class="action-group"><span class="group-label">卖方：</span></li>';
+                    html += '<li class="action-group"><span class="group-label">卖方</span></li>';
                     html += groups.seller.map(a => `
                         <li class="action-item">
                             <span class="action-dot ${a.type}"></span>
@@ -1402,27 +1344,22 @@
                 if (i === currentPhase) dot.classList.add('active');
             });
 
-            // Animate flows only if runAnimation is true
+            // Animate flows
             if (runAnimation) {
                 animateFlows(phase.flows, phase.actions);
             }
         }
 
         function animateFlows(flows, actions) {
-            // Remove existing flying emojis, arrows and connection lines
             document.querySelectorAll('.flying-emoji').forEach(e => e.remove());
             document.querySelectorAll('.flow-arrow').forEach(e => e.remove());
             document.querySelector('.connection-lines').innerHTML = '';
 
             if (flows.length === 0 && actions.length === 0) return;
 
-            // Each action gets 3 seconds
             const actionDuration = 3000 / speed;
-            const totalDuration = actionDuration * actions.length;
-
-            // Calculate duration per flow
             const flowCount = flows.length || 1;
-            const duration = totalDuration / flowCount;
+            const duration = (actionDuration * actions.length) / flowCount;
 
             flows.forEach((flow, index) => {
                 setTimeout(() => {
@@ -1431,33 +1368,54 @@
             });
         }
 
-        // Send pulse effect on sender
         function sendPulse(entityKey) {
             const entity = document.querySelector(`[data-entity="${entityKey}"]`);
             if (entity) {
                 entity.classList.remove('sending');
-                void entity.offsetWidth; // Trigger reflow
+                void entity.offsetWidth;
                 entity.classList.add('sending');
                 setTimeout(() => entity.classList.remove('sending'), 500);
             }
         }
 
-        // Receive pulse effect on receiver
         function receivePulse(entityKey) {
             const entity = document.querySelector(`[data-entity="${entityKey}"]`);
             if (entity) {
                 entity.classList.remove('receiving');
-                void entity.offsetWidth; // Trigger reflow
+                void entity.offsetWidth;
                 entity.classList.add('receiving');
                 setTimeout(() => entity.classList.remove('receiving'), 700);
             }
         }
 
-        // Determine flow type based on emoji
         function getFlowType(emoji) {
             if (emoji === '📈' || emoji === '📋') return 'stock';
             if (emoji === '💰') return 'money';
             return 'default';
+        }
+
+        function getEntityCenterPixels(entityKey) {
+            const entity = document.querySelector(`[data-entity="${entityKey}"]`);
+            const scene = document.getElementById('circleScene');
+            const sceneRect = scene.getBoundingClientRect();
+            const entityRect = entity.getBoundingClientRect();
+
+            return {
+                x: entityRect.left + entityRect.width / 2 - sceneRect.left,
+                y: entityRect.top + entityRect.height / 2 - sceneRect.top
+            };
+        }
+
+        function getEntityCenter(entityKey) {
+            const entity = document.querySelector(`[data-entity="${entityKey}"]`);
+            const scene = document.getElementById('circleScene');
+            const sceneRect = scene.getBoundingClientRect();
+            const entityRect = entity.getBoundingClientRect();
+
+            return {
+                x: ((entityRect.left + entityRect.width / 2) - sceneRect.left) * (600 / sceneRect.width),
+                y: ((entityRect.top + entityRect.height / 2) - sceneRect.top) * (500 / sceneRect.height)
+            };
         }
 
         function createFlyingEmoji(flow, duration) {
@@ -1465,10 +1423,7 @@
             const toPos = getEntityCenterPixels(flow.to);
             const flowType = getFlowType(flow.emoji);
 
-            // Send pulse on sender first
             sendPulse(flow.from);
-
-            // Highlight connection line
             highlightConnectionLine(flow.from, flow.to, flowType);
 
             const emoji = document.createElement('div');
@@ -1476,7 +1431,6 @@
             emoji.textContent = flow.emoji;
             emoji.style.setProperty('--duration', `${duration}ms`);
 
-            // Add flow label if available
             if (flow.label) {
                 const label = document.createElement('div');
                 label.className = 'flow-label';
@@ -1484,21 +1438,16 @@
                 emoji.appendChild(label);
             }
 
-            // Set glow color based on flow type
             if (flowType === 'stock') {
-                emoji.style.filter = 'drop-shadow(0 0 12px rgba(88, 86, 214, 0.7)) drop-shadow(0 0 24px rgba(88, 86, 214, 0.4))';
+                emoji.style.filter = 'drop-shadow(0 0 12px rgba(139, 92, 246, 0.7))';
             } else if (flowType === 'money') {
-                emoji.style.filter = 'drop-shadow(0 0 12px rgba(52, 199, 89, 0.7)) drop-shadow(0 0 24px rgba(52, 199, 89, 0.4))';
+                emoji.style.filter = 'drop-shadow(0 0 12px rgba(16, 185, 129, 0.7))';
             }
 
-            // Start position
             emoji.style.left = fromPos.x + 'px';
             emoji.style.top = fromPos.y + 'px';
-
-            // Apply transform
             emoji.style.transform = 'translate(-50%, -50%)';
 
-            // Animate using Web Animations API (straight line)
             const animation = emoji.animate([
                 { left: fromPos.x + 'px', top: fromPos.y + 'px', offset: 0 },
                 { left: toPos.x + 'px', top: toPos.y + 'px', offset: 1 }
@@ -1510,21 +1459,13 @@
 
             circleScene.appendChild(emoji);
 
-            // Highlight receiver at end
             animation.onfinish = () => {
-                // Keep emoji visible briefly
                 setTimeout(() => {
-                    // Receiver pulse effect
                     receivePulse(flow.to);
-
-                    // Fade out emoji
                     emoji.style.transition = 'opacity 0.3s ease';
                     emoji.style.opacity = '0';
-
                     setTimeout(() => {
                         emoji.remove();
-                        arrow.remove();
-                        // Clear connection line after animation
                         document.querySelector('.connection-lines').innerHTML = '';
                     }, 300);
                 }, 500);
@@ -1533,11 +1474,8 @@
 
         function highlightConnectionLine(from, to, flowType) {
             const svg = document.querySelector('.connection-lines');
-
-            // Clear previous connection lines
             svg.innerHTML = '';
 
-            // Create line only between from and to entities
             const fromPos = getEntityCenter(from);
             const toPos = getEntityCenter(to);
 
@@ -1583,7 +1521,6 @@
             isPlaying = true;
             playIcon.style.display = 'none';
             pauseIcon.style.display = 'block';
-
             scheduleNextPhase();
         }
 
@@ -1595,12 +1532,9 @@
                 return;
             }
 
-            // Calculate interval based on next phase's actions (each action takes 3s)
             const nextPhaseData = phases[currentPhase + 1];
             const actionCount = nextPhaseData.actions.length || 1;
-            const minInterval = actionCount * 3000 + 1500; // 3s per action + 1.5s buffer
-
-            // Use the larger of minimum interval or speed-based interval
+            const minInterval = actionCount * 3000 + 1500;
             const baseInterval = 4000;
             const interval = Math.max(minInterval, baseInterval) / speed;
 
@@ -1651,14 +1585,8 @@
                 else if (e.code === 'ArrowRight') nextPhase();
                 else if (e.code === 'ArrowLeft') prevPhase();
             });
-
-            // Handle resize
-            window.addEventListener('resize', () => {
-                drawConnectionLines();
-            });
         }
 
-        // Start
         init();
     </script>
 </body>
