@@ -274,7 +274,22 @@
 
         .entity:hover {
             background: var(--bg-card-hover);
+        }
+
+        /* 非居中实体hover上移 */
+        .entity-left-top:hover,
+        .entity-left-middle:hover,
+        .entity-left-bottom:hover,
+        .entity-right-top:hover,
+        .entity-right-middle:hover,
+        .entity-right-bottom:hover {
             transform: translateY(-2px);
+        }
+
+        /* 居中实体hover不上移，保持居中 */
+        .entity-middle-top:hover,
+        .entity-middle-bottom:hover {
+            transform: translateX(-50%);
         }
 
         .entity.active {
@@ -366,11 +381,20 @@
             z-index: 1;
         }
 
+        .connection-lines svg {
+            width: 100%;
+            height: 100%;
+        }
+
         .connection-line {
-            stroke: rgba(212, 168, 83, 0.15);
-            stroke-width: 1.5;
+            stroke: rgba(212, 168, 83, 0.2);
+            stroke-width: 2;
             fill: none;
-            stroke-dasharray: 6, 4;
+            stroke-dasharray: none;
+            stroke-linecap: round;
+            transition: all 0.3s ease;
+            will-change: stroke, stroke-width;
+        }
             transition: all 0.3s ease;
         }
 
@@ -401,6 +425,18 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            will-change: left, top;
+        }
+
+        /* Emoji出现时的缩放效果 */
+        .flying-emoji.emerge {
+            animation: emoji-emerge 0.3s ease-out forwards;
+        }
+
+        @keyframes emoji-emerge {
+            0% { transform: translate(-50%, -50%) scale(0.3); opacity: 0; }
+            60% { transform: translate(-50%, -50%) scale(1.15); }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
         }
 
         .flying-emoji .flow-label {
@@ -449,6 +485,20 @@
             100% { transform: scale(1.05); }
         }
 
+        /* 居中实体的脉冲动画 - 保持translateX */
+        @keyframes receive-pulse-center {
+            0% { transform: translateX(-50%) scale(1.05); }
+            30% { transform: translateX(-50%) scale(1.2); box-shadow: 0 0 0 12px rgba(212, 168, 83, 0.2); }
+            60% { transform: translateX(-50%) scale(0.95); }
+            100% { transform: translateX(-50%) scale(1.05); }
+        }
+
+        @keyframes send-pulse-center {
+            0% { transform: translateX(-50%) scale(1.05); }
+            50% { transform: translateX(-50%) scale(1.15); box-shadow: 0 0 0 12px rgba(59, 130, 246, 0); border-color: var(--accent-blue); }
+            100% { transform: translateX(-50%) scale(1.05); box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); }
+        }
+
         .entity-left-top.receiving,
         .entity-left-middle.receiving,
         .entity-left-bottom.receiving,
@@ -458,9 +508,16 @@
             animation-name: receive-pulse;
         }
 
+        /* 居中实体使用不同的动画 */
         .entity-middle-top.receiving,
         .entity-middle-bottom.receiving {
-            animation-name: receive-pulse;
+            animation-name: receive-pulse-center;
+        }
+
+        /* 居中实体的发送动画 */
+        .entity-middle-top.sending,
+        .entity-middle-bottom.sending {
+            animation-name: send-pulse-center;
         }
 
         /* Control Bar */
@@ -867,7 +924,7 @@
                     </div>
                     <div class="circle-scene" id="circleScene">
                         <!-- Connection Lines -->
-                        <svg class="connection-lines" viewBox="0 0 600 500" preserveAspectRatio="xMidYMid meet">
+                        <svg class="connection-lines" width="100%" height="100%">
                         </svg>
 
                         <!-- Entities: Buy Side (Left) -->
@@ -1103,7 +1160,7 @@
             {
                 id: 6,
                 title: '清算',
-                desc: 'HKSCC作为中央对手方发出T+2清算指令，券商接收并确认清算信息',
+                desc: 'HKSCC作为中央对手方发出T+2清算指令，券商与存管机构接收并确认清算信息',
                 emoji: emojiTypes.settle,
                 actions: [
                     { text: 'HKSCC生成并发出T+2清算指令', type: 'sender', group: 'all' },
@@ -1137,7 +1194,7 @@
                 active: ['buyer-broker', 'buyer-bank', 'seller-broker', 'seller-investor'],
                 flows: [
                     { from: 'buyer-broker', to: 'buyer-bank', emoji: '💳', label: '扣款指令' },
-                    { from: 'buyer-bank', to: 'buyer-broker', emoji: '💰', label: '扣款' },
+                    { from: 'buyer-bank', to: 'buyer-bank', emoji: '💰', label: '执行扣款' },
                     { from: 'buyer-broker', to: 'seller-broker', emoji: '💰', label: '清算划转' },
                     { from: 'seller-broker', to: 'seller-investor', emoji: '🔔', label: '到账通知' }
                 ]
@@ -1412,10 +1469,12 @@
             const sceneRect = scene.getBoundingClientRect();
             const entityRect = entity.getBoundingClientRect();
 
-            return {
-                x: ((entityRect.left + entityRect.width / 2) - sceneRect.left) * (600 / sceneRect.width),
-                y: ((entityRect.top + entityRect.height / 2) - sceneRect.top) * (500 / sceneRect.height)
-            };
+            // 计算实体中心相对于scene的像素位置
+            const x = entityRect.left + entityRect.width / 2 - sceneRect.left;
+            const y = entityRect.top + entityRect.height / 2 - sceneRect.top;
+
+            // 直接使用像素位置，SVG会自动缩放匹配
+            return { x, y };
         }
 
         function createFlyingEmoji(flow, duration) {
@@ -1427,7 +1486,7 @@
             highlightConnectionLine(flow.from, flow.to, flowType);
 
             const emoji = document.createElement('div');
-            emoji.className = 'flying-emoji';
+            emoji.className = 'flying-emoji emerge';
             emoji.textContent = flow.emoji;
             emoji.style.setProperty('--duration', `${duration}ms`);
 
@@ -1442,11 +1501,12 @@
                 emoji.style.filter = 'drop-shadow(0 0 12px rgba(139, 92, 246, 0.7))';
             } else if (flowType === 'money') {
                 emoji.style.filter = 'drop-shadow(0 0 12px rgba(16, 185, 129, 0.7))';
+            } else {
+                emoji.style.filter = 'drop-shadow(0 0 12px rgba(212, 168, 83, 0.7))';
             }
 
             emoji.style.left = fromPos.x + 'px';
             emoji.style.top = fromPos.y + 'px';
-            emoji.style.transform = 'translate(-50%, -50%)';
 
             const animation = emoji.animate([
                 { left: fromPos.x + 'px', top: fromPos.y + 'px', offset: 0 },
