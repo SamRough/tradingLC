@@ -691,6 +691,17 @@
         .action-dot.sender { background: var(--accent-blue); }
         .action-dot.receiver { background: var(--orange); }
 
+        .action-group {
+            margin-top: 8px;
+            margin-bottom: 2px;
+        }
+
+        .group-label {
+            font-weight: 600;
+            font-size: 13px;
+            color: #333;
+        }
+
         /* Flow Legend */
         .legend {
             display: flex;
@@ -1074,13 +1085,17 @@
                 desc: '买方券商进行风控检查、资金验证',
                 emoji: '✓',
                 actions: [
-                    { text: '券商检查资金是否充足', type: 'sender' },
-                    { text: '风控系统审核订单', type: 'sender' }
+                    { text: '券商验证买入订单信息完整性', type: 'sender' },
+                    { text: '检查资金是否充足', type: 'sender' },
+                    { text: '风控系统审核订单合规性', type: 'sender' },
+                    { text: '检查持仓是否超限', type: 'sender' }
                 ],
                 active: ['buyer-broker'],
                 flows: [
+                    { from: 'buyer-broker', to: 'buyer-broker', emoji: '✓', label: '订单验证' },
                     { from: 'buyer-broker', to: 'buyer-broker', emoji: '✓', label: '资金检查' },
-                    { from: 'buyer-broker', to: 'buyer-broker', emoji: '✓', label: '风控审核' }
+                    { from: 'buyer-broker', to: 'buyer-broker', emoji: '✓', label: '风控审核' },
+                    { from: 'buyer-broker', to: 'buyer-broker', emoji: '✓', label: '持仓检查' }
                 ]
             },
             {
@@ -1089,11 +1104,15 @@
                 desc: '买方券商将订单路由到交易所',
                 emoji: '📤',
                 actions: [
-                    { text: '买方券商将订单发送到交易所', type: 'sender' }
+                    { text: '买方券商将订单发送到交易所', type: 'sender' },
+                    { text: '交易所接收并确认订单', type: 'receiver' },
+                    { text: '订单进入撮合队列', type: 'receiver' }
                 ],
                 active: ['buyer-broker', 'exchange'],
                 flows: [
-                    { from: 'buyer-broker', to: 'exchange', emoji: '📄', label: '订单' }
+                    { from: 'buyer-broker', to: 'exchange', emoji: '📄', label: '订单' },
+                    { from: 'exchange', to: 'exchange', emoji: '✓', label: '确认' },
+                    { from: 'exchange', to: 'exchange', emoji: '📋', label: '队列' }
                 ]
             },
             {
@@ -1102,13 +1121,17 @@
                 desc: '交易所自动匹配买卖订单',
                 emoji: '⚡',
                 actions: [
-                    { text: '系统查找匹配订单', type: 'sender' },
-                    { text: '价格数量撮合成功', type: 'sender' }
+                    { text: '系统查找匹配的卖出订单', type: 'sender' },
+                    { text: '确认价格和数量匹配', type: 'sender' },
+                    { text: '生成成交记录', type: 'receiver' },
+                    { text: '更新订单状态为已成交', type: 'receiver' }
                 ],
                 active: ['exchange'],
                 flows: [
                     { from: 'exchange', to: 'exchange', emoji: '⚡', label: '查找订单' },
-                    { from: 'exchange', to: 'exchange', emoji: '⚡', label: '撮合' }
+                    { from: 'exchange', to: 'exchange', emoji: '⚡', label: '价格确认' },
+                    { from: 'exchange', to: 'exchange', emoji: '📝', label: '记录' },
+                    { from: 'exchange', to: 'exchange', emoji: '✅', label: '成交' }
                 ]
             },
             {
@@ -1117,16 +1140,18 @@
                 desc: '成交信息返回给买卖双方券商和投资者',
                 emoji: emojiTypes.done,
                 actions: [
-                    { text: '交易所发送成交报告', type: 'sender' },
-                    { text: '卖方券商通知卖方投资者', type: 'receiver' },
-                    { text: '买方券商通知买方投资者', type: 'receiver' }
+                    { text: '交易所发送成交报告', type: 'sender', group: 'all' },
+                    { text: '买方券商收到成交确认', type: 'receiver', group: 'buyer' },
+                    { text: '卖方券商收到成交确认', type: 'receiver', group: 'seller' },
+                    { text: '买方券商通知买方投资者已完成买入', type: 'sender', group: 'buyer' },
+                    { text: '卖方券商通知卖方投资者已完成卖出', type: 'sender', group: 'seller' }
                 ],
                 active: ['exchange', 'buyer-broker', 'seller-broker', 'buyer-investor', 'seller-investor'],
                 flows: [
-                    { from: 'exchange', to: 'seller-broker', emoji: '✅', label: '成交(卖)' },
                     { from: 'exchange', to: 'buyer-broker', emoji: '✅', label: '成交(买)' },
-                    { from: 'seller-broker', to: 'seller-investor', emoji: '🔔', label: '通知' },
-                    { from: 'buyer-broker', to: 'buyer-investor', emoji: '🔔', label: '通知' }
+                    { from: 'exchange', to: 'seller-broker', emoji: '✅', label: '成交(卖)' },
+                    { from: 'buyer-broker', to: 'buyer-investor', emoji: '🔔', label: '买入通知' },
+                    { from: 'seller-broker', to: 'seller-investor', emoji: '🔔', label: '卖出通知' }
                 ]
             },
             {
@@ -1135,14 +1160,19 @@
                 desc: '清算所(HKSCC)发出清算指令',
                 emoji: emojiTypes.settle,
                 actions: [
-                    { text: 'HKSCC生成清算指令', type: 'sender' },
-                    { text: '指令发送给券商和存管', type: 'receiver' }
+                    { text: 'HKSCC生成清算指令', type: 'sender', group: 'all' },
+                    { text: '买方券商接收清算指令', type: 'receiver', group: 'buyer' },
+                    { text: '卖方券商接收清算指令', type: 'receiver', group: 'seller' },
+                    { text: '存管机构接收清算指令', type: 'receiver', group: 'all' },
+                    { text: '卖方券商确认清算信息', type: 'sender', group: 'seller' },
+                    { text: '卖方投资者确认清算完成', type: 'receiver', group: 'seller' }
                 ],
-                active: ['exchange', 'buyer-broker', 'seller-broker', 'custodian'],
+                active: ['exchange', 'buyer-broker', 'seller-broker', 'custodian', 'seller-investor'],
                 flows: [
-                    { from: 'exchange', to: 'custodian', emoji: '📋', label: '清算' },
                     { from: 'exchange', to: 'buyer-broker', emoji: '📋', label: '清算(买)' },
-                    { from: 'exchange', to: 'seller-broker', emoji: '📋', label: '清算(卖)' }
+                    { from: 'exchange', to: 'seller-broker', emoji: '📋', label: '清算(卖)' },
+                    { from: 'exchange', to: 'custodian', emoji: '📋', label: '清算' },
+                    { from: 'seller-broker', to: 'seller-investor', emoji: '✅', label: '确认' }
                 ]
             },
             {
@@ -1151,13 +1181,17 @@
                 desc: 'T+2 银行完成资金划转',
                 emoji: emojiTypes.money,
                 actions: [
-                    { text: '买方银行扣款', type: 'sender' },
-                    { text: '资金划转至卖方银行', type: 'receiver' }
+                    { text: '买方投资者授权扣款', type: 'sender', group: 'buyer' },
+                    { text: '买方银行扣款', type: 'sender', group: 'buyer' },
+                    { text: '资金划转至卖方银行', type: 'receiver', group: 'all' },
+                    { text: '卖方银行通知卖方投资者款项已到账', type: 'sender', group: 'seller' }
                 ],
-                active: ['buyer-investor', 'buyer-bank', 'seller-bank'],
+                active: ['buyer-investor', 'buyer-bank', 'seller-bank', 'seller-investor'],
                 flows: [
+                    { from: 'buyer-investor', to: 'buyer-bank', emoji: '💳', label: '授权' },
                     { from: 'buyer-investor', to: 'buyer-bank', emoji: '💰', label: '付款' },
-                    { from: 'buyer-bank', to: 'seller-bank', emoji: '💰', label: '划转' }
+                    { from: 'buyer-bank', to: 'seller-bank', emoji: '💰', label: '划转' },
+                    { from: 'seller-bank', to: 'seller-investor', emoji: '🔔', label: '到账' }
                 ]
             },
             {
@@ -1166,13 +1200,18 @@
                 desc: 'T+2 存管机构完成证券划转',
                 emoji: emojiTypes.stock,
                 actions: [
-                    { text: '卖方证券过户', type: 'sender' },
-                    { text: '证券登记至买方', type: 'receiver' }
+                    { text: '卖方投资者提交过户指令', type: 'sender', group: 'seller' },
+                    { text: '存管机构执行证券过户', type: 'sender', group: 'all' },
+                    { text: '卖方券商确认过户完成', type: 'receiver', group: 'seller' },
+                    { text: '证券登记至买方投资者账户', type: 'receiver', group: 'buyer' },
+                    { text: '买方券商确认登记完成', type: 'receiver', group: 'buyer' }
                 ],
-                active: ['seller-investor', 'custodian', 'buyer-investor'],
+                active: ['seller-investor', 'seller-broker', 'custodian', 'buyer-investor', 'buyer-broker'],
                 flows: [
                     { from: 'seller-investor', to: 'custodian', emoji: '📈', label: '过户' },
-                    { from: 'custodian', to: 'buyer-investor', emoji: '📈', label: '登记' }
+                    { from: 'custodian', to: 'seller-broker', emoji: '✅', label: '确认' },
+                    { from: 'custodian', to: 'buyer-investor', emoji: '📈', label: '登记' },
+                    { from: 'custodian', to: 'buyer-broker', emoji: '✅', label: '确认' }
                 ]
             },
             {
@@ -1181,15 +1220,21 @@
                 desc: '券商更新投资者账户持仓',
                 emoji: '📊',
                 actions: [
-                    { text: '买方券商更新资金账户', type: 'sender' },
-                    { text: '更新股票持仓', type: 'sender' },
-                    { text: '买方投资者可查询持仓', type: 'receiver' }
+                    { text: '买方券商更新资金账户(扣除买入款)', type: 'sender', group: 'buyer' },
+                    { text: '买方持仓增加', type: 'sender', group: 'buyer' },
+                    { text: '买方投资者可查询持仓', type: 'receiver', group: 'buyer' },
+                    { text: '卖方券商更新资金账户(增加卖出款)', type: 'sender', group: 'seller' },
+                    { text: '卖方持仓减少', type: 'sender', group: 'seller' },
+                    { text: '卖方投资者可查询持仓', type: 'receiver', group: 'seller' }
                 ],
-                active: ['buyer-broker', 'buyer-investor'],
+                active: ['buyer-broker', 'buyer-investor', 'seller-broker', 'seller-investor'],
                 flows: [
-                    { from: 'buyer-broker', to: 'buyer-broker', emoji: '📊', label: '更新资金' },
-                    { from: 'buyer-broker', to: 'buyer-broker', emoji: '📊', label: '更新持仓' },
-                    { from: 'buyer-broker', to: 'buyer-investor', emoji: '📊', label: '持仓' }
+                    { from: 'buyer-broker', to: 'buyer-broker', emoji: '💰', label: '更新资金' },
+                    { from: 'buyer-broker', to: 'buyer-broker', emoji: '📈', label: '持仓+' },
+                    { from: 'seller-broker', to: 'seller-broker', emoji: '💰', label: '更新资金' },
+                    { from: 'seller-broker', to: 'seller-broker', emoji: '📉', label: '持仓-' },
+                    { from: 'buyer-broker', to: 'buyer-investor', emoji: '📊', label: '持仓' },
+                    { from: 'seller-broker', to: 'seller-investor', emoji: '📊', label: '持仓' }
                 ]
             },
             {
@@ -1198,15 +1243,19 @@
                 desc: 'T+2交割完成，整个交易流程结束',
                 emoji: emojiTypes.complete,
                 actions: [
-                    { text: '资金结算完成', type: 'sender' },
-                    { text: '证券交割完成', type: 'sender' },
-                    { text: '交易流程结束', type: 'receiver' }
+                    { text: '资金结算完成', type: 'sender', group: 'buyer' },
+                    { text: '证券交割完成', type: 'sender', group: 'seller' },
+                    { text: '买方交易完成确认', type: 'receiver', group: 'buyer' },
+                    { text: '卖方交易完成确认', type: 'receiver', group: 'seller' },
+                    { text: '交易流程结束', type: 'receiver', group: 'all' }
                 ],
-                active: ['buyer-investor', 'buyer-broker', 'exchange', 'buyer-bank', 'seller-bank', 'custodian'],
+                active: ['buyer-investor', 'buyer-broker', 'seller-investor', 'seller-broker', 'exchange', 'buyer-bank', 'seller-bank', 'custodian'],
                 flows: [
                     { from: 'buyer-broker', to: 'buyer-broker', emoji: '✅', label: '资金结算' },
+                    { from: 'seller-broker', to: 'seller-broker', emoji: '✅', label: '资金结算' },
                     { from: 'custodian', to: 'custodian', emoji: '✅', label: '证券交割' },
-                    { from: 'buyer-broker', to: 'buyer-investor', emoji: '🎉', label: '完成' }
+                    { from: 'buyer-broker', to: 'buyer-investor', emoji: '🎉', label: '完成' },
+                    { from: 'seller-broker', to: 'seller-investor', emoji: '🎉', label: '完成' }
                 ]
             }
         ];
@@ -1294,12 +1343,51 @@
             phaseDesc.textContent = phase.desc;
 
             // Update actions
-            actionList.innerHTML = phase.actions.map(a => `
-                <li class="action-item">
-                    <span class="action-dot ${a.type}"></span>
-                    <span>${a.text}</span>
-                </li>
-            `).join('');
+            const hasGroups = phase.actions.some(a => a.group);
+            if (hasGroups) {
+                // Group actions by group property
+                const groups = { buyer: [], seller: [], all: [] };
+                phase.actions.forEach(a => {
+                    const g = a.group || 'all';
+                    if (groups[g]) groups[g].push(a);
+                });
+
+                let html = '';
+                if (groups.buyer.length > 0) {
+                    html += '<li class="action-group"><span class="group-label">买方：</span></li>';
+                    html += groups.buyer.map(a => `
+                        <li class="action-item">
+                            <span class="action-dot ${a.type}"></span>
+                            <span>${a.text}</span>
+                        </li>
+                    `).join('');
+                }
+                if (groups.seller.length > 0) {
+                    html += '<li class="action-group"><span class="group-label">卖方：</span></li>';
+                    html += groups.seller.map(a => `
+                        <li class="action-item">
+                            <span class="action-dot ${a.type}"></span>
+                            <span>${a.text}</span>
+                        </li>
+                    `).join('');
+                }
+                if (groups.all.length > 0) {
+                    html += groups.all.map(a => `
+                        <li class="action-item">
+                            <span class="action-dot ${a.type}"></span>
+                            <span>${a.text}</span>
+                        </li>
+                    `).join('');
+                }
+                actionList.innerHTML = html;
+            } else {
+                actionList.innerHTML = phase.actions.map(a => `
+                    <li class="action-item">
+                        <span class="action-dot ${a.type}"></span>
+                        <span>${a.text}</span>
+                    </li>
+                `).join('');
+            }
 
             // Update entities
             document.querySelectorAll('.entity').forEach(e => {
@@ -1495,8 +1583,34 @@
             isPlaying = true;
             playIcon.style.display = 'none';
             pauseIcon.style.display = 'block';
-            const interval = 5500 / speed; // Extended to 5.5s to allow 4s animation + buffer
-            playTimer = setInterval(nextPhase, interval);
+
+            scheduleNextPhase();
+        }
+
+        function scheduleNextPhase() {
+            if (!isPlaying) return;
+
+            if (currentPhase >= phases.length - 1) {
+                pause();
+                return;
+            }
+
+            // Calculate interval based on next phase's actions (each action takes 3s)
+            const nextPhaseData = phases[currentPhase + 1];
+            const actionCount = nextPhaseData.actions.length || 1;
+            const minInterval = actionCount * 3000 + 1500; // 3s per action + 1.5s buffer
+
+            // Use the larger of minimum interval or speed-based interval
+            const baseInterval = 4000;
+            const interval = Math.max(minInterval, baseInterval) / speed;
+
+            playTimer = setTimeout(() => {
+                if (isPlaying) {
+                    currentPhase++;
+                    updatePhase();
+                    scheduleNextPhase();
+                }
+            }, interval);
         }
 
         function pause() {
