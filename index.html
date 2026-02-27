@@ -428,6 +428,12 @@
         }
 
         @keyframes send-pulse-bottom {
+            0% { transform: scale(1.05); box-shadow: 0 0 0 0 rgba(0, 113, 227, 0.6); }
+            50% { transform: scale(1.15); box-shadow: 0 0 0 12px rgba(0, 113, 227, 0); border-color: var(--accent-blue); }
+            100% { transform: scale(1.05); box-shadow: 0 0 0 0 rgba(0, 113, 227, 0); }
+        }
+
+        @keyframes send-pulse-middle {
             0% { transform: translateX(-50%) scale(1.05); box-shadow: 0 0 0 0 rgba(0, 113, 227, 0.6); }
             50% { transform: translateX(-50%) scale(1.15); box-shadow: 0 0 0 12px rgba(0, 113, 227, 0); border-color: var(--accent-blue); }
             100% { transform: translateX(-50%) scale(1.05); box-shadow: 0 0 0 0 rgba(0, 113, 227, 0); }
@@ -457,10 +463,11 @@
         .entity-left-bottom.sending,
         .entity-right-top.sending,
         .entity-right-middle.sending,
-        .entity-right-bottom.sending,
-        .entity-top-right.sending,
+        .entity-right-bottom.sending { animation-name: send-pulse-bottom; }
+
         .entity-middle-top.sending,
-        .entity-middle-bottom.sending { animation-name: send-pulse-bottom; }
+        .entity-middle-bottom.sending,
+        .entity-top-right.sending { animation-name: send-pulse-middle; }
 
         /* New position classes for receive */
         .entity-top.receiving { animation-name: receive-pulse-top; }
@@ -477,7 +484,7 @@
         .entity-right-bottom.receiving,
         .entity-top-right.receiving,
         .entity-middle-top.receiving,
-        .entity-middle-bottom.receiving { animation-name: receive-pulse-bottom; }
+        .entity-middle-bottom.receiving { animation-name: receive-pulse-middle; }
 
         /* Receiver pulse effect */
         @keyframes receive-pulse-top {
@@ -495,6 +502,13 @@
         }
 
         @keyframes receive-pulse-bottom {
+            0% { transform: scale(1.05); }
+            30% { transform: scale(1.3); box-shadow: 0 0 0 16px rgba(255, 149, 0, 0.3); border-color: var(--orange); }
+            60% { transform: scale(0.95); }
+            100% { transform: scale(1.05); }
+        }
+
+        @keyframes receive-pulse-middle {
             0% { transform: translateX(-50%) scale(1.05); }
             30% { transform: translateX(-50%) scale(1.3); box-shadow: 0 0 0 16px rgba(255, 149, 0, 0.3); border-color: var(--orange); }
             60% { transform: translateX(-50%) scale(0.95); }
