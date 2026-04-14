@@ -290,9 +290,7 @@
 
         /* 居中实体hover不上移，保持居中 */
         .entity-middle-top:hover,
-        .entity-middle-bottom:hover,
-        .entity-middle-8-top:hover,
-        .entity-middle-8-bottom:hover {
+        .entity-middle-bottom:hover {
             transform: translateX(-50%);
         }
 
@@ -345,7 +343,7 @@
             letter-spacing: 0.02em;
         }
 
-        /* Entity positions */
+        /* Entity positions - 4 left, 2 center, 4 right */
         .entity-left-top { top: 3%; left: 1%; }
         .entity-left-middle { top: 25%; left: 1%; }
         .entity-left-lower-middle { top: 47%; left: 1%; }
@@ -356,17 +354,11 @@
         .entity-right-lower-middle { top: 47%; right: 1%; }
         .entity-right-bottom { top: 69%; right: 3%; }
 
-        .entity-middle-top { top: 3%; left: 50%; transform: translateX(-50%); }
-        .entity-middle-bottom { top: 47%; left: 50%; transform: translateX(-50%); }
-
-        /* 8实体布局 - 中间两层 */
-        .entity-middle-8-top { top: 25%; left: 50%; transform: translateX(-50%); }
-        .entity-middle-8-bottom { top: 69%; left: 50%; transform: translateX(-50%); }
+        .entity-middle-top { top: 15%; left: 50%; transform: translateX(-50%); }
+        .entity-middle-bottom { top: 55%; left: 50%; transform: translateX(-50%); }
 
         .entity-middle-top.active,
-        .entity-middle-bottom.active,
-        .entity-middle-8-top.active,
-        .entity-middle-8-bottom.active {
+        .entity-middle-bottom.active {
             transform: translateX(-50%) scale(1.05);
         }
 
@@ -382,7 +374,6 @@
         .entity-seller-investor-bank .entity-icon { background: linear-gradient(135deg, #d97706, #f59e0b); }
 
         .entity-exchange .entity-icon { background: linear-gradient(135deg, #7c3aed, #8b5cf6); }
-        .entity-custodian .entity-icon { background: linear-gradient(135deg, #c026d3, #db2777); }
         .entity-hkscc .entity-icon { background: linear-gradient(135deg, #0891b2, #06b6d4); }
 
         /* Connection Lines */
@@ -409,8 +400,6 @@
             stroke-linecap: round;
             transition: all 0.3s ease;
             will-change: stroke, stroke-width;
-        }
-            transition: all 0.3s ease;
         }
 
         .connection-line.active {
@@ -527,17 +516,13 @@
 
         /* 居中实体使用不同的动画 */
         .entity-middle-top.receiving,
-        .entity-middle-bottom.receiving,
-        .entity-middle-8-top.receiving,
-        .entity-middle-8-bottom.receiving {
+        .entity-middle-bottom.receiving {
             animation-name: receive-pulse-center;
         }
 
         /* 居中实体的发送动画 */
         .entity-middle-top.sending,
-        .entity-middle-bottom.sending,
-        .entity-middle-8-top.sending,
-        .entity-middle-8-bottom.sending {
+        .entity-middle-bottom.sending {
             animation-name: send-pulse-center;
         }
 
@@ -630,15 +615,15 @@
         .timeline {
             display: flex;
             align-items: center;
-            gap: 3px;
+            gap: 2px;
             flex: 1;
             justify-content: center;
-            min-width: 260px;
+            min-width: 280px;
         }
 
         .timeline-dot {
-            width: 26px;
-            height: 26px;
+            width: 24px;
+            height: 24px;
             border-radius: 6px;
             background: var(--bg-secondary);
             border: 1px solid var(--border-subtle);
@@ -646,7 +631,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 10px;
+            font-size: 9px;
             font-weight: 600;
             font-family: var(--font-mono);
             color: var(--text-muted);
@@ -675,7 +660,7 @@
             flex: 1;
             height: 2px;
             background: var(--border-subtle);
-            min-width: 6px;
+            min-width: 4px;
         }
 
         /* Right Column */
@@ -766,6 +751,20 @@
             color: var(--text-muted);
             font-family: var(--font-mono);
             letter-spacing: 0.1em;
+        }
+
+        .phase-t-tag {
+            display: inline-block;
+            font-size: 9px;
+            font-family: var(--font-mono);
+            font-weight: 600;
+            color: var(--accent-gold);
+            background: rgba(212, 168, 83, 0.1);
+            border: 1px solid rgba(212, 168, 83, 0.2);
+            border-radius: 4px;
+            padding: 2px 6px;
+            margin-left: 8px;
+            letter-spacing: 0.05em;
         }
 
         .phase-description {
@@ -941,7 +940,7 @@
                 <div class="scene-card">
                     <div class="scene-header">
                         <span class="scene-title">交易流程可视化</span>
-                        <span class="scene-info">实时演示</span>
+                        <span class="scene-info">T+2 结算周期</span>
                     </div>
                     <div class="circle-scene" id="circleScene">
                         <!-- Connection Lines -->
@@ -958,38 +957,32 @@
                         <div class="entity entity-buyer-broker entity-left-middle" data-entity="buyer-broker">
                             <div class="entity-icon">🏢</div>
                             <div class="entity-name">买方券商</div>
-                            <div class="entity-role">买方通道</div>
+                            <div class="entity-role">买方经纪</div>
                         </div>
 
                         <div class="entity entity-buyer-bank entity-left-lower-middle" data-entity="buyer-bank">
                             <div class="entity-icon">🏦</div>
-                            <div class="entity-name">买方银行</div>
-                            <div class="entity-role">券商托管</div>
+                            <div class="entity-name">买方指定银行</div>
+                            <div class="entity-role">券商结算银行</div>
                         </div>
 
                         <div class="entity entity-buyer-investor-bank entity-left-bottom" data-entity="buyer-investor-bank">
                             <div class="entity-icon">💳</div>
-                            <div class="entity-name">买方投资者银行</div>
-                            <div class="entity-role">入金银行</div>
+                            <div class="entity-name">买方个人银行</div>
+                            <div class="entity-role">入金来源</div>
                         </div>
 
-                        <!-- Neutral (Middle) -->
+                        <!-- Neutral (Middle) - 2 entities -->
                         <div class="entity entity-exchange entity-middle-top" data-entity="exchange">
                             <div class="entity-icon">📊</div>
-                            <div class="entity-name">交易所(HKEX)</div>
+                            <div class="entity-name">联交所(SEHK)</div>
                             <div class="entity-role">撮合成交</div>
                         </div>
 
-                        <div class="entity entity-custodian entity-middle-8-top" data-entity="custodian">
+                        <div class="entity entity-hkscc entity-middle-bottom" data-entity="hkscc">
                             <div class="entity-icon">🏛️</div>
-                            <div class="entity-name">CCASS</div>
-                            <div class="entity-role">中央结算</div>
-                        </div>
-
-                        <div class="entity entity-hkscc entity-middle-8-bottom" data-entity="hkscc">
-                            <div class="entity-icon">💵</div>
-                            <div class="entity-name">HKSCC</div>
-                            <div class="entity-role">清算机构</div>
+                            <div class="entity-name">HKSCC/CCASS</div>
+                            <div class="entity-role">中央对手方/结算</div>
                         </div>
 
                         <!-- Entities: Sell Side (Right) -->
@@ -1002,19 +995,19 @@
                         <div class="entity entity-seller-broker entity-right-middle" data-entity="seller-broker">
                             <div class="entity-icon">🏢</div>
                             <div class="entity-name">卖方券商</div>
-                            <div class="entity-role">卖方通道</div>
+                            <div class="entity-role">卖方经纪</div>
                         </div>
 
                         <div class="entity entity-seller-bank entity-right-lower-middle" data-entity="seller-bank">
                             <div class="entity-icon">🏦</div>
-                            <div class="entity-name">卖方银行</div>
-                            <div class="entity-role">券商托管</div>
+                            <div class="entity-name">卖方指定银行</div>
+                            <div class="entity-role">券商结算银行</div>
                         </div>
 
                         <div class="entity entity-seller-investor-bank entity-right-bottom" data-entity="seller-investor-bank">
                             <div class="entity-icon">💳</div>
-                            <div class="entity-name">卖方投资者银行</div>
-                            <div class="entity-role">出金银行</div>
+                            <div class="entity-name">卖方个人银行</div>
+                            <div class="entity-role">出金目标</div>
                         </div>
                     </div>
                 </div>
@@ -1054,19 +1047,19 @@
                     <div class="phase-header">
                         <div class="phase-badge" id="phaseBadge">1</div>
                         <div class="phase-title-group">
-                            <h2 class="phase-title" id="phaseTitle">下单阶段</h2>
-                            <div class="phase-number">PHASE <span id="phaseNumber">01</span> / 10</div>
+                            <h2 class="phase-title" id="phaseTitle">入金阶段</h2>
+                            <div class="phase-number">PHASE <span id="phaseNumber">01</span> / 12 <span class="phase-t-tag" id="phaseTTag">T日前</span></div>
                         </div>
                     </div>
                     <p class="phase-description" id="phaseDesc">
-                        买卖双方投资者分别向各自的券商提交订单指令
+                        买方投资者将资金存入券商客户信托账户，为交易做准备
                     </p>
                     <div class="current-action">
                         <div class="action-title">当前操作 Current Actions</div>
                         <ul class="action-list" id="actionList">
                             <li class="action-item">
                                 <span class="action-dot sender"></span>
-                                <span>投资者提交买入/卖出订单</span>
+                                <span>投资者入金至券商客户信托账户</span>
                             </li>
                         </ul>
                     </div>
@@ -1077,7 +1070,7 @@
                     <div class="legend-item"><span class="legend-emoji">📄</span><span>订单</span></div>
                     <div class="legend-item"><span class="legend-emoji">📈</span><span>股票</span></div>
                     <div class="legend-item"><span class="legend-emoji">💰</span><span>资金</span></div>
-                    <div class="legend-item"><span class="legend-emoji">✅</span><span>成交</span></div>
+                    <div class="legend-item"><span class="legend-emoji">✅</span><span>确认</span></div>
                     <div class="legend-item"><span class="legend-emoji">📋</span><span>清算</span></div>
                     <div class="legend-item"><span class="legend-emoji">🔔</span><span>通知</span></div>
                     <div class="legend-item"><span class="legend-emoji">🎉</span><span>完成</span></div>
@@ -1098,17 +1091,45 @@
             complete: '🎉'
         };
 
-        // 交易阶段配置
+        // ========================================
+        // 12阶段交易流程配置
+        // 严格按照 HKEX/SEHK/HKSCC/CCASS 实际机制
+        // ========================================
         const phases = [
+            // ---- Phase 1: 入金 (Pre-trade) ----
             {
                 id: 1,
+                title: '入金',
+                tTag: 'T日前',
+                desc: '交易前准备：买方投资者通过FPS/银行转账/支票将资金存入券商的客户信托账户（SFC要求独立隔离），卖方确认证券已托管于券商CCASS参与者账户',
+                emoji: emojiTypes.money,
+                actions: [
+                    { text: '买方投资者通过FPS/银行转账/支票发起入金', type: 'sender', group: 'buyer' },
+                    { text: '资金从买方个人银行转至券商客户信托账户', type: 'sender', group: 'buyer' },
+                    { text: '买方券商确认到账，更新投资者内部资金余额', type: 'receiver', group: 'buyer' },
+                    { text: '卖方确认证券已存于券商CCASS参与者账户', type: 'sender', group: 'seller' },
+                    { text: '券商客户信托账户独立隔离（SFC规定）', type: 'receiver', group: 'all' }
+                ],
+                active: ['buyer-investor', 'buyer-investor-bank', 'buyer-broker', 'seller-investor', 'seller-broker'],
+                flows: [
+                    { from: 'buyer-investor', to: 'buyer-investor-bank', emoji: '💳', label: '发起转账' },
+                    { from: 'buyer-investor-bank', to: 'buyer-broker', emoji: '💰', label: 'FPS/转账' },
+                    { from: 'buyer-broker', to: 'buyer-investor', emoji: '✅', label: '到账确认' },
+                    { from: 'seller-investor', to: 'seller-broker', emoji: '📈', label: '确认持仓' }
+                ]
+            },
+            // ---- Phase 2: 下单 (Order Placement) ----
+            {
+                id: 2,
                 title: '下单',
-                desc: '买卖双方投资者通过电话/网上/手机向券商提交订单(限价单/市价单/竞价单)',
+                tTag: 'T日',
+                desc: '买卖双方投资者通过电话/网上/手机APP向各自券商提交订单指令。持续交易时段可使用限价盘或增强限价盘；竞价时段可使用竞价盘或竞价限价盘',
                 emoji: emojiTypes.order,
                 actions: [
-                    { text: '买方投资者提交买入订单(限价/市价/竞价)', type: 'sender', group: 'buyer' },
-                    { text: '卖方投资者提交卖出订单(限价/市价/竞价)', type: 'sender', group: 'seller' },
-                    { text: '券商接收订单并分配交易编号', type: 'receiver', group: 'all' }
+                    { text: '买方投资者提交买入订单（限价盘/增强限价盘）', type: 'sender', group: 'buyer' },
+                    { text: '卖方投资者提交卖出订单（限价盘/增强限价盘）', type: 'sender', group: 'seller' },
+                    { text: '券商接收订单并分配内部交易编号', type: 'receiver', group: 'all' },
+                    { text: '交易时段：开市前竞价9:00-9:30 / 持续交易9:30-16:00 / 收市竞价16:00-16:10', type: 'receiver', group: 'all' }
                 ],
                 active: ['buyer-investor', 'buyer-broker', 'seller-investor', 'seller-broker'],
                 flows: [
@@ -1116,195 +1137,226 @@
                     { from: 'seller-investor', to: 'seller-broker', emoji: '📄', label: '卖出订单' }
                 ]
             },
-            {
-                id: 2,
-                title: '验证',
-                desc: '券商进行风控检查：买入需验证资金(联系投资者银行)，卖出需通过CCASS验证持仓',
-                emoji: '✓',
-                actions: [
-                    { text: '券商验证买入订单信息完整性', type: 'sender', group: 'buyer' },
-                    { text: '联系买方投资者银行确认资金充足', type: 'sender', group: 'buyer' },
-                    { text: '风控系统审核订单合规性(SFC要求)', type: 'sender', group: 'buyer' },
-                    { text: '券商验证卖出订单信息完整性', type: 'sender', group: 'seller' },
-                    { text: '通过CCASS查询卖方持仓是否充足', type: 'sender', group: 'seller' },
-                    { text: '风控系统审核订单合规性(SFC要求)', type: 'sender', group: 'seller' }
-                ],
-                active: ['buyer-broker', 'buyer-investor-bank', 'seller-broker', 'custodian'],
-                flows: [
-                    { from: 'buyer-broker', to: 'buyer-investor-bank', emoji: '📞', label: '确认资金' },
-                    { from: 'buyer-broker', to: 'buyer-broker', emoji: '✓', label: '订单验证' },
-                    { from: 'buyer-broker', to: 'buyer-broker', emoji: '✓', label: '风控审核' },
-                    { from: 'seller-broker', to: 'custodian', emoji: '📋', label: '查持仓' },
-                    { from: 'seller-broker', to: 'seller-broker', emoji: '✓', label: '订单验证' },
-                    { from: 'seller-broker', to: 'seller-broker', emoji: '✓', label: '风控审核' }
-                ]
-            },
+            // ---- Phase 3: 验证 (Pre-trade Check) ----
             {
                 id: 3,
+                title: '验证',
+                tTag: 'T日',
+                desc: '券商内部风控检查：买方验证客户信托账户资金余额是否充足；卖方验证券商内部持仓记录（与CCASS参与者账户同步）',
+                emoji: '✓',
+                actions: [
+                    { text: '买方券商检查投资者内部账户资金余额', type: 'sender', group: 'buyer' },
+                    { text: '买方券商风控审核（SFC合规要求）', type: 'sender', group: 'buyer' },
+                    { text: '卖方券商检查内部持仓记录', type: 'sender', group: 'seller' },
+                    { text: '卖方券商风控审核（SFC合规要求）', type: 'sender', group: 'seller' },
+                    { text: '验证通过，订单进入待提交状态', type: 'receiver', group: 'all' }
+                ],
+                active: ['buyer-broker', 'seller-broker'],
+                flows: [
+                    { from: 'buyer-broker', to: 'buyer-broker', emoji: '💰', label: '资金检查' },
+                    { from: 'buyer-broker', to: 'buyer-broker', emoji: '✅', label: '风控通过' },
+                    { from: 'seller-broker', to: 'seller-broker', emoji: '📈', label: '持仓检查' },
+                    { from: 'seller-broker', to: 'seller-broker', emoji: '✅', label: '风控通过' }
+                ]
+            },
+            // ---- Phase 4: 路由 (Order Routing) ----
+            {
+                id: 4,
                 title: '路由',
-                desc: '券商通过OSDP将订单发送至HKEX交易所，系统分配交易所参与者编号',
+                tTag: 'T日',
+                desc: '券商通过OCG（Orion Central Gateway）将订单发送至联交所的OTP（Orion Trading Platform）交易平台，系统分配交易所订单编号并进入撮合队列',
                 emoji: '📤',
                 actions: [
-                    { text: '买方券商通过OSDP将订单发送至HKEX', type: 'sender', group: 'buyer' },
-                    { text: '卖方券商通过OSDP将订单发送至HKEX', type: 'sender', group: 'seller' },
-                    { text: 'HKEX接收并分配交易编号', type: 'receiver', group: 'all' },
-                    { text: '订单进入自动撮合队列', type: 'receiver', group: 'all' }
+                    { text: '买方券商通过OCG网关发送订单至SEHK', type: 'sender', group: 'buyer' },
+                    { text: '卖方券商通过OCG网关发送订单至SEHK', type: 'sender', group: 'seller' },
+                    { text: 'SEHK/OTP接收并分配交易所订单编号', type: 'receiver', group: 'all' },
+                    { text: '订单进入OTP自动撮合队列', type: 'receiver', group: 'all' }
                 ],
                 active: ['buyer-broker', 'seller-broker', 'exchange'],
                 flows: [
-                    { from: 'buyer-broker', to: 'exchange', emoji: '📤', label: 'OSDP路由' },
-                    { from: 'seller-broker', to: 'exchange', emoji: '📤', label: 'OSDP路由' },
-                    { from: 'exchange', to: 'exchange', emoji: '✓', label: '编号确认' },
-                    { from: 'exchange', to: 'exchange', emoji: '📋', label: '入队列' }
+                    { from: 'buyer-broker', to: 'exchange', emoji: '📤', label: 'OCG路由' },
+                    { from: 'seller-broker', to: 'exchange', emoji: '📤', label: 'OCG路由' }
                 ]
             },
+            // ---- Phase 5: 撮合 (Matching) ----
             {
-                id: 4,
+                id: 5,
                 title: '撮合',
-                desc: 'HKEX自动撮合系统(AMS)按照价格优先、时间优先原则匹配买卖订单',
+                tTag: 'T日',
+                desc: 'SEHK的OTP（Orion Trading Platform）按照价格优先、时间优先原则自动匹配买卖订单，生成成交记录',
                 emoji: '⚡',
                 actions: [
-                    { text: 'AMS查找价格匹配的买卖订单', type: 'sender' },
-                    { text: '确认价格和数量完全匹配', type: 'sender' },
-                    { text: '生成成交记录(Trade Capture)', type: 'receiver' },
+                    { text: 'OTP按价格优先、时间优先查找匹配订单', type: 'sender' },
+                    { text: '确认买卖价格和数量匹配', type: 'sender' },
+                    { text: '生成成交记录（Trade Capture）', type: 'receiver' },
                     { text: '更新订单状态为已成交', type: 'receiver' }
                 ],
                 active: ['exchange'],
                 flows: [
-                    { from: 'exchange', to: 'exchange', emoji: '⚡', label: 'AMS撮合' },
-                    { from: 'exchange', to: 'exchange', emoji: '⚡', label: '价格确认' },
-                    { from: 'exchange', to: 'exchange', emoji: '📝', label: '成交记录' },
-                    { from: 'exchange', to: 'exchange', emoji: '✅', label: '成交确认' }
+                    { from: 'exchange', to: 'exchange', emoji: '⚡', label: 'OTP撮合' },
+                    { from: 'exchange', to: 'exchange', emoji: '✅', label: '价格匹配' },
+                    { from: 'exchange', to: 'exchange', emoji: '📝', label: '成交记录' }
                 ]
             },
-            {
-                id: 5,
-                title: '成交',
-                desc: '交易所发送成交确认(Trade Confirmation)，券商发送结算指令(Settlement Instructions)',
-                emoji: emojiTypes.done,
-                actions: [
-                    { text: 'HKEX发送成交报告(Trade Confirmation)', type: 'sender', group: 'all' },
-                    { text: '买方券商收到成交确认', type: 'receiver', group: 'buyer' },
-                    { text: '卖方券商收到成交确认', type: 'receiver', group: 'seller' },
-                    { text: '券商发送T+2结算指令至HKSCC', type: 'sender', group: 'all' },
-                    { text: '买方券商通知买方投资者已完成买入', type: 'sender', group: 'buyer' },
-                    { text: '卖方券商通知卖方投资者已完成卖出', type: 'sender', group: 'seller' }
-                ],
-                active: ['exchange', 'buyer-broker', 'seller-broker', 'hkscc', 'buyer-investor', 'seller-investor'],
-                flows: [
-                    { from: 'exchange', to: 'buyer-broker', emoji: '✅', label: '成交确认' },
-                    { from: 'exchange', to: 'seller-broker', emoji: '✅', label: '成交确认' },
-                    { from: 'buyer-broker', to: 'hkscc', emoji: '📋', label: '结算指令' },
-                    { from: 'seller-broker', to: 'hkscc', emoji: '📋', label: '结算指令' },
-                    { from: 'buyer-broker', to: 'buyer-investor', emoji: '🔔', label: '买入通知' },
-                    { from: 'seller-broker', to: 'seller-investor', emoji: '🔔', label: '卖出通知' }
-                ]
-            },
+            // ---- Phase 6: 成交确认 (Trade Confirmation) ----
             {
                 id: 6,
+                title: '成交',
+                tTag: 'T日',
+                desc: 'SEHK向买卖双方券商发送成交报告（Execution Report），券商通知投资者成交结果。同时成交数据自动传送至HKSCC',
+                emoji: emojiTypes.done,
+                actions: [
+                    { text: 'SEHK发送成交报告（Execution Report）至券商', type: 'sender', group: 'all' },
+                    { text: '买方券商接收成交确认', type: 'receiver', group: 'buyer' },
+                    { text: '卖方券商接收成交确认', type: 'receiver', group: 'seller' },
+                    { text: '买方券商通知买方投资者：买入成交', type: 'sender', group: 'buyer' },
+                    { text: '卖方券商通知卖方投资者：卖出成交', type: 'sender', group: 'seller' },
+                    { text: '成交数据自动传送至HKSCC/CCASS系统', type: 'sender', group: 'all' }
+                ],
+                active: ['exchange', 'buyer-broker', 'seller-broker', 'buyer-investor', 'seller-investor', 'hkscc'],
+                flows: [
+                    { from: 'exchange', to: 'buyer-broker', emoji: '✅', label: '成交报告' },
+                    { from: 'exchange', to: 'seller-broker', emoji: '✅', label: '成交报告' },
+                    { from: 'buyer-broker', to: 'buyer-investor', emoji: '🔔', label: '买入通知' },
+                    { from: 'seller-broker', to: 'seller-investor', emoji: '🔔', label: '卖出通知' },
+                    { from: 'exchange', to: 'hkscc', emoji: '📋', label: '成交数据' }
+                ]
+            },
+            // ---- Phase 7: 合约更替 (Novation & CNS Netting) ----
+            {
+                id: 7,
+                title: '合约更替',
+                tTag: 'T日盘后',
+                desc: 'HKSCC作为中央对手方（CCP）执行合约更替（Novation）：原始"买方券商↔卖方券商"的合约拆分为"买方券商↔HKSCC"和"HKSCC↔卖方券商"两个独立合约。随后通过CNS（持续净额交收）对每个参与者当日所有交易进行净额计算',
+                emoji: '🔄',
+                actions: [
+                    { text: 'HKSCC自动从SEHK接收全部成交数据', type: 'receiver', group: 'all' },
+                    { text: 'Novation：原合约替换为两个CCP合约', type: 'sender', group: 'all' },
+                    { text: '合约A：买方券商 ↔ HKSCC（CCP）', type: 'receiver', group: 'buyer' },
+                    { text: '合约B：HKSCC（CCP） ↔ 卖方券商', type: 'receiver', group: 'seller' },
+                    { text: 'CNS净额计算：汇总每个参与者全天交易', type: 'sender', group: 'all' },
+                    { text: '生成各参与者的净交收义务（净额股票+净额资金）', type: 'receiver', group: 'all' }
+                ],
+                active: ['hkscc', 'buyer-broker', 'seller-broker'],
+                flows: [
+                    { from: 'hkscc', to: 'hkscc', emoji: '🔄', label: 'Novation' },
+                    { from: 'hkscc', to: 'buyer-broker', emoji: '📋', label: 'CCP合约A' },
+                    { from: 'hkscc', to: 'seller-broker', emoji: '📋', label: 'CCP合约B' },
+                    { from: 'hkscc', to: 'hkscc', emoji: '📊', label: 'CNS净额' }
+                ]
+            },
+            // ---- Phase 8: 清算 (Settlement Instruction) ----
+            {
+                id: 8,
                 title: '清算',
-                desc: 'HKSCC作为中央对手方(CCP)发出T+2清算指令，CCASS与券商接收并确认证券清算信息',
+                tTag: 'T+1',
+                desc: 'HKSCC向各参与者发出最终T+2结算指令，包含净额交收的证券和资金义务。券商核实并确认结算指令',
                 emoji: emojiTypes.settle,
                 actions: [
-                    { text: 'HKSCC生成T+2清算指令(DvP/PvP)', type: 'sender', group: 'all' },
-                    { text: 'CCASS接收证券清算指令', type: 'receiver', group: 'all' },
-                    { text: '买方券商接收资金清算指令', type: 'receiver', group: 'buyer' },
-                    { text: '卖方券商接收资金清算指令', type: 'receiver', group: 'seller' },
-                    { text: '券商确认清算信息并反馈', type: 'sender', group: 'all' }
+                    { text: 'HKSCC发出最终净额结算指令（DvP）', type: 'sender', group: 'all' },
+                    { text: '买方券商接收并确认资金交付义务', type: 'receiver', group: 'buyer' },
+                    { text: '卖方券商接收并确认证券交付义务', type: 'receiver', group: 'seller' },
+                    { text: '券商核实结算指令并反馈确认', type: 'sender', group: 'all' },
+                    { text: '费用明细：印花税0.1%、交易征费0.00278%、交易费0.00057%、结算费0.002%', type: 'receiver', group: 'all' }
                 ],
-                active: ['hkscc', 'custodian', 'buyer-broker', 'seller-broker'],
+                active: ['hkscc', 'buyer-broker', 'seller-broker'],
                 flows: [
-                    { from: 'hkscc', to: 'custodian', emoji: '📋', label: '证券清算' },
-                    { from: 'hkscc', to: 'buyer-broker', emoji: '📋', label: '资金清算' },
-                    { from: 'hkscc', to: 'seller-broker', emoji: '📋', label: '资金清算' },
+                    { from: 'hkscc', to: 'buyer-broker', emoji: '📋', label: '资金义务' },
+                    { from: 'hkscc', to: 'seller-broker', emoji: '📋', label: '证券义务' },
                     { from: 'buyer-broker', to: 'hkscc', emoji: '✅', label: '确认' },
                     { from: 'seller-broker', to: 'hkscc', emoji: '✅', label: '确认' }
                 ]
             },
-            {
-                id: 7,
-                title: '资金',
-                desc: 'T+2资金清算：买方银行扣款 → 资金经HKSCC划转 → 卖方银行到账 → 通知投资者',
-                emoji: emojiTypes.money,
-                actions: [
-                    { text: 'HKSCC发出资金清算指令', type: 'sender', group: 'all' },
-                    { text: '买方券商向买方银行(托管)发出扣款指令', type: 'sender', group: 'buyer' },
-                    { text: '买方银行(托管)执行扣款', type: 'sender', group: 'buyer' },
-                    { text: '资金通过HKSCC从买方银行划转至卖方银行', type: 'receiver', group: 'all' },
-                    { text: '卖方银行确认资金到账', type: 'receiver', group: 'seller' },
-                    { text: '卖方券商增加卖方投资者保证金账户', type: 'sender', group: 'seller' },
-                    { text: '卖方券商通知卖方投资者资金已到账', type: 'sender', group: 'seller' }
-                ],
-                active: ['hkscc', 'buyer-broker', 'buyer-bank', 'seller-bank', 'seller-broker', 'seller-investor'],
-                flows: [
-                    { from: 'hkscc', to: 'buyer-broker', emoji: '📋', label: '清算指令' },
-                    { from: 'buyer-broker', to: 'buyer-bank', emoji: '💳', label: '扣款指令' },
-                    { from: 'buyer-bank', to: 'hkscc', emoji: '💰', label: '资金提交' },
-                    { from: 'hkscc', to: 'seller-bank', emoji: '💰', label: '资金划转' },
-                    { from: 'seller-bank', to: 'seller-broker', emoji: '✅', label: '到账确认' },
-                    { from: 'seller-broker', to: 'seller-investor', emoji: '🔔', label: '到账通知' }
-                ]
-            },
-            {
-                id: 8,
-                title: '证券',
-                desc: 'T+2 CCASS自动完成证券划转：卖方证券过户至买方，投资者无需主动操作',
-                emoji: emojiTypes.stock,
-                actions: [
-                    { text: 'CCASS自动执行证券过户(投资者无需操作)', type: 'sender', group: 'all' },
-                    { text: '证券从卖方账户转移至CCASS', type: 'sender', group: 'seller' },
-                    { text: '证券从CCASS登记至买方投资者账户', type: 'receiver', group: 'buyer' },
-                    { text: '卖方券商确认证券已过户', type: 'receiver', group: 'seller' },
-                    { text: '买方券商确认证券已登记', type: 'receiver', group: 'buyer' }
-                ],
-                active: ['custodian', 'seller-broker', 'buyer-broker'],
-                flows: [
-                    { from: 'custodian', to: 'custodian', emoji: '📈', label: '证券过户' },
-                    { from: 'custodian', to: 'seller-broker', emoji: '✅', label: '过户确认' },
-                    { from: 'custodian', to: 'buyer-broker', emoji: '✅', label: '登记确认' }
-                ]
-            },
+            // ---- Phase 9: 资金交收 (Fund Settlement) ----
             {
                 id: 9,
-                title: '持仓',
-                desc: '券商更新投资者账户：资金扣划/增加，持仓增加/减少',
-                emoji: '📊',
+                title: '资金交收',
+                tTag: 'T+2',
+                desc: 'T+2资金清算日：买方券商指定银行通过RTGS/CHATS将净额资金划转至HKSCC在金管局的账户，再由HKSCC划转至卖方券商指定银行',
+                emoji: emojiTypes.money,
                 actions: [
-                    { text: '买方券商更新资金账户(扣除买入款)', type: 'sender', group: 'buyer' },
-                    { text: '买方持仓增加(通过CCASS登记)', type: 'sender', group: 'buyer' },
-                    { text: '买方投资者可查询持仓', type: 'receiver', group: 'buyer' },
-                    { text: '卖方券商更新资金账户(增加卖出款)', type: 'sender', group: 'seller' },
-                    { text: '卖方持仓减少(通过CCASS过户)', type: 'sender', group: 'seller' },
-                    { text: '卖方投资者可查询持仓', type: 'receiver', group: 'seller' }
+                    { text: 'HKSCC发出资金交收指令', type: 'sender', group: 'all' },
+                    { text: '买方券商通知指定银行执行RTGS付款', type: 'sender', group: 'buyer' },
+                    { text: '买方指定银行通过RTGS/CHATS划转资金至HKSCC', type: 'sender', group: 'buyer' },
+                    { text: 'HKSCC确认收款，通过RTGS划转至卖方指定银行', type: 'receiver', group: 'all' },
+                    { text: '卖方指定银行确认资金到账', type: 'receiver', group: 'seller' },
+                    { text: '卖方券商更新客户信托账户余额', type: 'receiver', group: 'seller' }
                 ],
-                active: ['buyer-broker', 'buyer-investor', 'seller-broker', 'seller-investor', 'custodian'],
+                active: ['hkscc', 'buyer-broker', 'buyer-bank', 'seller-bank', 'seller-broker'],
                 flows: [
-                    { from: 'buyer-broker', to: 'buyer-broker', emoji: '💰', label: '扣款' },
-                    { from: 'custodian', to: 'buyer-broker', emoji: '📈', label: '持仓+' },
-                    { from: 'seller-broker', to: 'seller-broker', emoji: '💰', label: '入账' },
-                    { from: 'seller-broker', to: 'custodian', emoji: '📉', label: '持仓-' },
-                    { from: 'buyer-broker', to: 'buyer-investor', emoji: '📊', label: '持仓' },
-                    { from: 'seller-broker', to: 'seller-investor', emoji: '📊', label: '持仓' }
+                    { from: 'buyer-broker', to: 'buyer-bank', emoji: '📋', label: 'RTGS指令' },
+                    { from: 'buyer-bank', to: 'hkscc', emoji: '💰', label: 'RTGS付款' },
+                    { from: 'hkscc', to: 'seller-bank', emoji: '💰', label: 'RTGS划转' },
+                    { from: 'seller-bank', to: 'seller-broker', emoji: '✅', label: '到账确认' }
                 ]
             },
+            // ---- Phase 10: 证券交收 (Securities Settlement) ----
             {
                 id: 10,
+                title: '证券交收',
+                tTag: 'T+2',
+                desc: 'T+2证券交收日（与资金交收同步进行，确保DvP券款对付）：HKSCC通过CCASS系统执行证券过户，从卖方券商CCASS参与者账户划转至买方券商CCASS参与者账户',
+                emoji: emojiTypes.stock,
+                actions: [
+                    { text: 'CCASS执行证券过户（投资者无需操作）', type: 'sender', group: 'all' },
+                    { text: '证券从卖方券商CCASS账户 → HKSCC账户', type: 'sender', group: 'seller' },
+                    { text: '证券从HKSCC账户 → 买方券商CCASS账户', type: 'receiver', group: 'buyer' },
+                    { text: '卖方券商确认证券已转出', type: 'receiver', group: 'seller' },
+                    { text: '买方券商确认证券已登记', type: 'receiver', group: 'buyer' },
+                    { text: 'DvP：资金交收与证券交收同步完成', type: 'receiver', group: 'all' }
+                ],
+                active: ['hkscc', 'seller-broker', 'buyer-broker'],
+                flows: [
+                    { from: 'seller-broker', to: 'hkscc', emoji: '📈', label: '证券转出' },
+                    { from: 'hkscc', to: 'buyer-broker', emoji: '📈', label: '证券登记' },
+                    { from: 'hkscc', to: 'seller-broker', emoji: '✅', label: '转出确认' },
+                    { from: 'hkscc', to: 'buyer-broker', emoji: '✅', label: '登记确认' }
+                ]
+            },
+            // ---- Phase 11: 持仓更新 (Portfolio Update) ----
+            {
+                id: 11,
+                title: '持仓更新',
+                tTag: 'T+2',
+                desc: '券商更新投资者账户信息：买方资金扣除（含印花税及各项费用）、持仓增加；卖方资金增加、持仓减少。投资者可查询最新持仓和资金明细',
+                emoji: '📊',
+                actions: [
+                    { text: '买方券商扣除买入款+费用（印花税/佣金/征费）', type: 'sender', group: 'buyer' },
+                    { text: '买方券商持仓增加（CCASS已登记）', type: 'sender', group: 'buyer' },
+                    { text: '买方投资者可查询最新持仓', type: 'receiver', group: 'buyer' },
+                    { text: '卖方券商增加卖出所得（扣除费用后净额）', type: 'sender', group: 'seller' },
+                    { text: '卖方券商持仓减少（CCASS已过户）', type: 'sender', group: 'seller' },
+                    { text: '卖方投资者可查询最新持仓', type: 'receiver', group: 'seller' }
+                ],
+                active: ['buyer-broker', 'buyer-investor', 'seller-broker', 'seller-investor'],
+                flows: [
+                    { from: 'buyer-broker', to: 'buyer-investor', emoji: '📊', label: '持仓+' },
+                    { from: 'buyer-broker', to: 'buyer-investor', emoji: '💰', label: '资金-' },
+                    { from: 'seller-broker', to: 'seller-investor', emoji: '📊', label: '持仓-' },
+                    { from: 'seller-broker', to: 'seller-investor', emoji: '💰', label: '资金+' }
+                ]
+            },
+            // ---- Phase 12: 完成/出金 (Completion & Withdrawal) ----
+            {
+                id: 12,
                 title: '完成',
-                desc: 'T+2交割完成：DvP(券款对付)成功，整个交易流程结束',
+                tTag: 'T+2 后',
+                desc: 'T+2交割完成：DvP（券款对付）成功确认。卖方投资者可申请出金，资金从券商客户信托账户转回个人银行。SFC要求所有交易记录保留不少于7年',
                 emoji: emojiTypes.complete,
                 actions: [
-                    { text: 'HKSCC确认资金结算完成(DvP)', type: 'sender', group: 'all' },
-                    { text: 'CCASS确认证券交割完成', type: 'sender', group: 'all' },
-                    { text: '买方交易完成确认(持仓已登记)', type: 'receiver', group: 'buyer' },
-                    { text: '卖方交易完成确认(资金已到账)', type: 'receiver', group: 'seller' },
-                    { text: '交易流程结束(SFC要求记录保留7年)', type: 'receiver', group: 'all' }
+                    { text: 'HKSCC确认DvP交割完成（资金+证券同步到位）', type: 'sender', group: 'all' },
+                    { text: '买方交易完成：持仓已登记至CCASS', type: 'receiver', group: 'buyer' },
+                    { text: '卖方交易完成：资金已到账', type: 'receiver', group: 'seller' },
+                    { text: '卖方投资者可申请出金至个人银行', type: 'sender', group: 'seller' },
+                    { text: '出金：券商客户信托账户 → 卖方个人银行', type: 'sender', group: 'seller' },
+                    { text: '交易记录归档（SFC要求保留不少于7年）', type: 'receiver', group: 'all' }
                 ],
-                active: ['hkscc', 'custodian', 'buyer-investor', 'buyer-broker', 'seller-investor', 'seller-broker', 'buyer-bank', 'seller-bank'],
+                active: ['hkscc', 'buyer-investor', 'buyer-broker', 'seller-investor', 'seller-broker', 'seller-investor-bank'],
                 flows: [
-                    { from: 'hkscc', to: 'hkscc', emoji: '✅', label: '资金结算' },
-                    { from: 'custodian', to: 'custodian', emoji: '✅', label: '证券交割' },
-                    { from: 'buyer-broker', to: 'buyer-investor', emoji: '🎉', label: '完成' },
-                    { from: 'seller-broker', to: 'seller-investor', emoji: '🎉', label: '完成' }
+                    { from: 'hkscc', to: 'hkscc', emoji: '✅', label: 'DvP完成' },
+                    { from: 'buyer-broker', to: 'buyer-investor', emoji: '🎉', label: '交易完成' },
+                    { from: 'seller-broker', to: 'seller-investor', emoji: '🎉', label: '交易完成' },
+                    { from: 'seller-broker', to: 'seller-investor-bank', emoji: '💰', label: '出金' }
                 ]
             }
         ];
@@ -1321,6 +1373,7 @@
         const phaseTitle = document.getElementById('phaseTitle');
         const phaseNumber = document.getElementById('phaseNumber');
         const phaseDesc = document.getElementById('phaseDesc');
+        const phaseTTag = document.getElementById('phaseTTag');
         const actionList = document.getElementById('actionList');
         const timeline = document.getElementById('timeline');
         const phaseProgress = document.getElementById('phaseProgress');
@@ -1382,6 +1435,7 @@
             phaseTitle.textContent = phase.title + '阶段';
             phaseNumber.textContent = String(phase.id).padStart(2, '0');
             phaseDesc.textContent = phase.desc;
+            phaseTTag.textContent = phase.tTag || '';
 
             // Update progress
             updatePhaseProgress();
@@ -1490,8 +1544,8 @@
         }
 
         function getFlowType(emoji) {
-            if (emoji === '📈' || emoji === '📋') return 'stock';
-            if (emoji === '💰') return 'money';
+            if (emoji === '📈' || emoji === '📋' || emoji === '📉') return 'stock';
+            if (emoji === '💰' || emoji === '💳') return 'money';
             return 'default';
         }
 
@@ -1513,11 +1567,9 @@
             const sceneRect = scene.getBoundingClientRect();
             const entityRect = entity.getBoundingClientRect();
 
-            // 计算实体中心相对于scene的像素位置
             const x = entityRect.left + entityRect.width / 2 - sceneRect.left;
             const y = entityRect.top + entityRect.height / 2 - sceneRect.top;
 
-            // 直接使用像素位置，SVG会自动缩放匹配
             return { x, y };
         }
 
@@ -1655,7 +1707,7 @@
             isPlaying = false;
             playIcon.style.display = 'block';
             pauseIcon.style.display = 'none';
-            if (playTimer) clearInterval(playTimer);
+            if (playTimer) clearTimeout(playTimer);
         }
 
         function togglePlay() {
