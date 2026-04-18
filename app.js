@@ -1,4 +1,14 @@
-// Config
+// Global error handlers — catch silent failures before they freeze the UI
+window.addEventListener('error', (e) => {
+    console.error('[TradingLC] Runtime error:', e.message, e.filename, e.lineno);
+});
+window.addEventListener('unhandledrejection', (e) => {
+    console.error('[TradingLC] Unhandled promise rejection:', e.reason);
+});
+
+// Config — URL params override defaults for demo flexibility
+// Usage: ?speed=1  to start at 1x speed
+const _params = new URLSearchParams(window.location.search);
 const CONFIG = {
     actionDuration:    3000,  // ms per action (base, before speed multiplier)
     pulseOutDuration:   500,  // ms: send-pulse class removal delay
@@ -7,10 +17,12 @@ const CONFIG = {
     emojiFadeDuration:  300,  // ms: emoji fade-out after arrival
     scheduleBuffer:    1500,  // ms: extra buffer added to auto-play interval
     scheduleBase:      4000,  // ms: minimum auto-play interval
+    initialSpeed:      Number(_params.get('speed')) || 2,  // configurable via URL
+    autoplay:          _params.get('autoplay') === 'true',  // ?autoplay=true
 };
 
 // State — single source of truth for mutable runtime values
-const state = { phase: 0, playing: false, speed: 2 };
+const state = { phase: 0, playing: false, speed: CONFIG.initialSpeed };
 const activeTimers = new Set();
 const activeAnimations = new Set();
 
@@ -236,6 +248,7 @@ function getFlowType(emoji) {
 
 function getEntityCenterPixels(entityKey) {
     const entity = entityMap.get(entityKey);
+    if (!entity) throw new Error(`Entity not found: ${entityKey}`);
     const sceneRect = circleScene.getBoundingClientRect();
     const entityRect = entity.getBoundingClientRect();
 
@@ -247,6 +260,7 @@ function getEntityCenterPixels(entityKey) {
 
 function getEntityCenter(entityKey) {
     const entity = entityMap.get(entityKey);
+    if (!entity) throw new Error(`Entity not found: ${entityKey}`);
     const sceneRect = circleScene.getBoundingClientRect();
     const entityRect = entity.getBoundingClientRect();
 
@@ -257,8 +271,14 @@ function getEntityCenter(entityKey) {
 }
 
 function createFlyingEmoji(flow, duration) {
-    const fromPos = getEntityCenterPixels(flow.from);
-    const toPos = getEntityCenterPixels(flow.to);
+    let fromPos, toPos;
+    try {
+        fromPos = getEntityCenterPixels(flow.from);
+        toPos = getEntityCenterPixels(flow.to);
+    } catch (e) {
+        console.warn('[TradingLC] Skipping flow animation:', e.message);
+        return;
+    }
     const flowType = getFlowType(flow.emoji);
 
     sendPulse(flow.from);
@@ -429,4 +449,12 @@ function setupEvents() {
     });
 }
 
-init();
+try {
+    init();
+    // Sync speed buttons to initial speed from URL param
+    speedBtns.forEach(b => b.classList.toggle('active', parseInt(b.dataset.speed) === state.speed));
+    // Auto-start playback if requested via URL (?autoplay=true)
+    if (CONFIG.autoplay) play();
+} catch (e) {
+    console.error('[TradingLC] Initialization failed:', e);
+}
