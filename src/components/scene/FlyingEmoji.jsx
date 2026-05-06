@@ -10,8 +10,39 @@ const glowColors = {
 export default function FlyingEmoji({ flow, onComplete }) {
   if (!flow) return null;
 
-  const { key, emoji, label, fromPos, toPos, flowType, duration } = flow;
+  const { key, emoji, label, fromPos, toPos, flowType, duration, isSelfLoop } = flow;
   const durSec = duration / 1000;
+
+  if (isSelfLoop) {
+    return (
+      <motion.div
+        key={key}
+        className="absolute left-0 top-0 z-[100] pointer-events-none"
+        initial={{ x: fromPos.x, y: fromPos.y, opacity: 0, scale: 0.6 }}
+        animate={{ x: fromPos.x, y: fromPos.y, opacity: [0, 1, 1], scale: [0.6, 1, 1] }}
+        exit={{ opacity: 0, transition: { duration: 0.3 } }}
+        transition={{ duration: durSec, times: [0, 0.08, 1], ease: 'easeOut' }}
+        onAnimationComplete={onComplete}
+      >
+        <div
+          className="flex flex-col items-center"
+          style={{ transform: 'translate(-50%, -50%)' }}
+        >
+          <span
+            className="text-xl sm:text-2xl leading-none"
+            style={{ filter: glowColors[flowType] || glowColors.default }}
+          >
+            {emoji}
+          </span>
+          {label && (
+            <span className="text-[9px] font-mono font-semibold bg-flame text-white px-1.5 py-0.5 rounded whitespace-nowrap mt-1">
+              {label}
+            </span>
+          )}
+        </div>
+      </motion.div>
+    );
+  }
 
   return (
     <motion.div

@@ -50,8 +50,15 @@ export function useFlowSequence(state, entityRefs, sceneRef) {
     setSendingEntity(null);
     setReceivingEntity(null);
     setConnectionLine(null);
-    setFlowsComplete(false);
     setFlowStepIndex(-1);
+
+    // Skip animation before user interacts (mirrors original init calling updatePhase(false))
+    if (!state.hasStarted) {
+      setFlowsComplete(true);
+      return;
+    }
+
+    setFlowsComplete(false);
 
     const phase = phases[state.phaseIndex];
     if (!phase || !phase.flows || phase.flows.length === 0) {
@@ -62,9 +69,18 @@ export function useFlowSequence(state, entityRefs, sceneRef) {
     const flows = phase.flows;
     const actionDuration = CONFIG.actionDuration / state.speed;
     const flowCount = flows.length || 1;
-    const duration = (actionDuration * (phase.actions?.length || 1)) / flowCount;
+    const baseDuration = (actionDuration * (phase.actions?.length || 1)) / flowCount;
 
+    // Self-loop flows (from === to) get a longer minimum duration so they're visible to the eye
+    const flowDurations = flows.map(flow =>
+      flow.from === flow.to
+        ? Math.max(baseDuration, CONFIG.selfLoopMinDuration / state.speed)
+        : baseDuration
+    );
+
+    let cumulativeDelay = 0;
     flows.forEach((flow, index) => {
+      const flowDuration = flowDurations[index];
       safeTimeout(() => {
         if (phaseRef.current !== state.phaseIndex) return;
 
@@ -87,17 +103,19 @@ export function useFlowSequence(state, entityRefs, sceneRef) {
             fromPos,
             toPos,
             flowType,
-            duration,
+            duration: flowDuration,
+            isSelfLoop: flow.from === flow.to,
           });
           setConnectionLine({ fromPos, toPos, flowType });
         }, 100);
-      }, index * duration);
+      }, cumulativeDelay);
+      cumulativeDelay += flowDuration;
     });
 
     return () => {
       clearAllTimers();
     };
-  }, [state.phaseIndex, state.speed]);
+  }, [state.phaseIndex, state.speed, state.playing]);
 
   // Cleanup on unmount
   useEffect(() => {

@@ -6,6 +6,7 @@ export const CONFIG = {
   emojiFadeDuration: 300,
   scheduleBuffer: 1500,
   scheduleBase: 4000,
+  selfLoopMinDuration: 2500,
   initialSpeed: 2,
 };
 

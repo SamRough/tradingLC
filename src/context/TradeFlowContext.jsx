@@ -11,7 +11,7 @@ export function TradeFlowProvider({ children }) {
   const { entityRefs, register } = useEntityRefs();
   const sceneRef = useRef(null);
   const data = useFlowSequence(state, entityRefs, sceneRef);
-  useAutoPlay(state, dispatch, data.flowsComplete);
+  useAutoPlay(state, dispatch);
 
   const value = {
     state,
