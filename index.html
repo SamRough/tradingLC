@@ -1,198 +1,28 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-<head>
+  <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>香港股票交易流程 | 金融终端</title>
+    <title>香港股票交易流程可视化 | TradingLC</title>
 
-    <!-- SEO -->
     <meta name="description" content="香港股票市场完整交易流程可视化：从入金到 T+2 结算，覆盖 SEHK、HKSCC/CCASS 12 个关键阶段，含 DvP、CNS 等清算细节。">
     <meta name="keywords" content="香港股票,港股交易流程,HKEX,HKSCC,CCASS,T+2结算,DvP,联交所,中央结算">
     <meta name="author" content="TradingLC">
-    <meta name="theme-color" content="#0a0e17">
+    <meta name="theme-color" content="#F5F0E8">
 
-    <!-- Open Graph (social sharing) -->
     <meta property="og:title" content="香港股票交易流程可视化">
     <meta property="og:description" content="交互式动画：从投资者入金到 T+2 清算完成，12 阶段完整呈现港股交易机制。">
     <meta property="og:type" content="website">
     <meta property="og:locale" content="zh_HK">
 
-    <!-- Twitter Card -->
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="香港股票交易流程可视化">
     <meta name="twitter:description" content="交互式动画：从投资者入金到 T+2 清算完成，12 阶段完整呈现港股交易机制。">
 
-    <!-- Favicon (inline SVG data URI — no extra file needed) -->
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23d4a853'/><text x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' font-size='18' font-weight='700' font-family='sans-serif' fill='%230a0e17'>HK</text></svg>">
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <header class="header">
-        <div class="header-left">
-            <div class="logo-mark" aria-hidden="true">HK</div>
-            <div class="header-title">
-                <h1>香港股票交易流程</h1>
-                <p>Hong Kong Stock Trading Flow</p>
-            </div>
-        </div>
-        <div class="header-status" role="status" aria-live="polite">
-            <span class="status-dot" aria-hidden="true"></span>
-            <span>系统就绪 SYSTEM READY</span>
-        </div>
-    </header>
-
-    <main class="main-container">
-        <div class="main-content">
-            <!-- Left Column: Scene + Controls -->
-            <div class="left-column">
-                <div class="scene-card">
-                    <div class="scene-header">
-                        <span class="scene-title">交易流程可视化</span>
-                        <span class="scene-info">T+2 结算周期</span>
-                    </div>
-                    <div class="circle-scene" id="circleScene"
-                         role="img" aria-label="香港股票交易各参与方流程可视化">
-                        <!-- Connection Lines -->
-                        <svg class="connection-lines" width="100%" height="100%" aria-hidden="true">
-                        </svg>
-
-                        <!-- Entities: Buy Side (Left) -->
-                        <div class="entity entity-buyer-investor entity-left-top" data-entity="buyer-investor">
-                            <div class="entity-icon" aria-hidden="true">👤</div>
-                            <div class="entity-name">买方投资者</div>
-                            <div class="entity-role">买入股票</div>
-                        </div>
-
-                        <div class="entity entity-buyer-broker entity-left-middle" data-entity="buyer-broker">
-                            <div class="entity-icon" aria-hidden="true">🏢</div>
-                            <div class="entity-name">买方券商</div>
-                            <div class="entity-role">买方经纪</div>
-                        </div>
-
-                        <div class="entity entity-buyer-bank entity-left-lower-middle" data-entity="buyer-bank">
-                            <div class="entity-icon" aria-hidden="true">🏦</div>
-                            <div class="entity-name">买方指定银行</div>
-                            <div class="entity-role">券商结算银行</div>
-                        </div>
-
-                        <div class="entity entity-buyer-investor-bank entity-left-bottom" data-entity="buyer-investor-bank">
-                            <div class="entity-icon" aria-hidden="true">💳</div>
-                            <div class="entity-name">买方个人银行</div>
-                            <div class="entity-role">入金来源</div>
-                        </div>
-
-                        <!-- Neutral (Middle) - 2 entities -->
-                        <div class="entity entity-exchange entity-middle-top" data-entity="exchange">
-                            <div class="entity-icon" aria-hidden="true">📊</div>
-                            <div class="entity-name">联交所(SEHK)</div>
-                            <div class="entity-role">撮合成交</div>
-                        </div>
-
-                        <div class="entity entity-hkscc entity-middle-bottom" data-entity="hkscc">
-                            <div class="entity-icon" aria-hidden="true">🏛️</div>
-                            <div class="entity-name">HKSCC/CCASS</div>
-                            <div class="entity-role">中央对手方/结算</div>
-                        </div>
-
-                        <!-- Entities: Sell Side (Right) -->
-                        <div class="entity entity-seller-investor entity-right-top" data-entity="seller-investor">
-                            <div class="entity-icon" aria-hidden="true">👤</div>
-                            <div class="entity-name">卖方投资者</div>
-                            <div class="entity-role">卖出股票</div>
-                        </div>
-
-                        <div class="entity entity-seller-broker entity-right-middle" data-entity="seller-broker">
-                            <div class="entity-icon" aria-hidden="true">🏢</div>
-                            <div class="entity-name">卖方券商</div>
-                            <div class="entity-role">卖方经纪</div>
-                        </div>
-
-                        <div class="entity entity-seller-bank entity-right-lower-middle" data-entity="seller-bank">
-                            <div class="entity-icon" aria-hidden="true">🏦</div>
-                            <div class="entity-name">卖方指定银行</div>
-                            <div class="entity-role">券商结算银行</div>
-                        </div>
-
-                        <div class="entity entity-seller-investor-bank entity-right-bottom" data-entity="seller-investor-bank">
-                            <div class="entity-icon" aria-hidden="true">💳</div>
-                            <div class="entity-name">卖方个人银行</div>
-                            <div class="entity-role">出金目标</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Control Bar -->
-                <div class="control-bar" role="toolbar" aria-label="播放控制">
-                    <div class="control-group" role="group" aria-label="导航">
-                        <button class="control-btn" id="prevBtn" title="上一步" aria-label="上一阶段">
-                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
-                        </button>
-                        <button class="control-btn primary" id="playBtn" title="播放/暂停" aria-label="播放">
-                            <svg viewBox="0 0 24 24" id="playIcon" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
-                            <svg viewBox="0 0 24 24" id="pauseIcon" style="display:none;" aria-hidden="true"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
-                        </button>
-                        <button class="control-btn" id="nextBtn" title="下一步" aria-label="下一阶段">
-                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
-                        </button>
-                        <button class="control-btn" id="resetBtn" title="重置" aria-label="重置">
-                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>
-                        </button>
-                    </div>
-
-                    <div class="speed-group" role="group" aria-label="播放速度">
-                        <button class="speed-btn" data-speed="1">1x</button>
-                        <button class="speed-btn active" data-speed="2">2x</button>
-                    </div>
-
-                    <div class="timeline" id="timeline" role="toolbar" aria-label="阶段时间轴"></div>
-                </div>
-            </div>
-
-            <!-- Right Column: Phase Panel + Legend -->
-            <div class="right-column">
-                <!-- Phase Panel -->
-                <div class="phase-panel" aria-live="polite" aria-atomic="false">
-                    <div class="phase-progress" id="phaseProgress" aria-hidden="true"></div>
-                    <div class="phase-header">
-                        <div class="phase-badge" id="phaseBadge" aria-hidden="true">1</div>
-                        <div class="phase-title-group">
-                            <h2 class="phase-title" id="phaseTitle">入金阶段</h2>
-                            <div class="phase-number">PHASE <span id="phaseNumber">01</span> / 12 <span class="phase-t-tag" id="phaseTTag">T日前</span></div>
-                        </div>
-                    </div>
-                    <p class="phase-description" id="phaseDesc">
-                        买方投资者将资金存入券商客户信托账户，为交易做准备
-                    </p>
-                    <div class="current-action">
-                        <div class="action-title" aria-hidden="true">当前操作 Current Actions</div>
-                        <ul class="action-list" id="actionList" aria-label="当前阶段操作步骤">
-                            <li class="action-item">
-                                <span class="action-dot sender" aria-hidden="true"></span>
-                                <span>投资者入金至券商客户信托账户</span>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- Legend -->
-                <div class="legend" role="list" aria-label="流程图例">
-                    <div class="legend-item" role="listitem"><span class="legend-emoji" aria-hidden="true">📄</span><span>订单</span></div>
-                    <div class="legend-item" role="listitem"><span class="legend-emoji" aria-hidden="true">📈</span><span>股票</span></div>
-                    <div class="legend-item" role="listitem"><span class="legend-emoji" aria-hidden="true">💰</span><span>资金</span></div>
-                    <div class="legend-item" role="listitem"><span class="legend-emoji" aria-hidden="true">✅</span><span>确认</span></div>
-                    <div class="legend-item" role="listitem"><span class="legend-emoji" aria-hidden="true">📋</span><span>清算</span></div>
-                    <div class="legend-item" role="listitem"><span class="legend-emoji" aria-hidden="true">🔔</span><span>通知</span></div>
-                    <div class="legend-item" role="listitem"><span class="legend-emoji" aria-hidden="true">🎉</span><span>完成</span></div>
-                </div>
-            </div>
-        </div>
-    </main>
-
-    <script src="phases-data.js"></script>
-    <script src="app.js"></script>
-</body>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23E8651A'/><text x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' font-size='18' font-weight='700' font-family='sans-serif' fill='%23fff'>HK</text></svg>">
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
 </html>
