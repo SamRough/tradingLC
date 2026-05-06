@@ -4,6 +4,7 @@ import PhaseProgress from './PhaseProgress';
 import PhaseHeader from './PhaseHeader';
 import PhaseDescription from './PhaseDescription';
 import ActionList from './ActionList';
+import SettlementTypesPanel from './SettlementTypesPanel';
 
 export default function PhasePanel() {
   const { state } = useTradeFlow();
@@ -18,6 +19,7 @@ export default function PhasePanel() {
         <PhaseHeader id={phase.id} title={phase.title} tTag={phase.tTag} />
         <PhaseDescription description={phase.desc} />
         <ActionList actions={phase.actions} />
+        <SettlementTypesPanel settlementInfo={phase.settlementInfo} />
       </div>
     </div>
   );

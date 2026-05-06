@@ -168,7 +168,7 @@ const phases = [
         id: 8,
         title: '清算',
         tTag: 'T+1',
-        desc: 'HKSCC向各参与者发出最终T+2结算指令，包含净额交收的证券和资金义务。券商核实并确认结算指令',
+        desc: 'HKSCC 发出 T+2 结算指令，告诉每个参与者要交多少钱、交多少股。\n\n普通股票交易（本流程）固定使用 CNS + DVP：\n· CNS 把你全天的买卖轧成一个净额，不用笔笔单独结算\n· DVP 保证证券和资金同步到账，不存在交了券收不到钱的风险\n· 两者均为强制，参与者无法选择其他模式\n\n场外大宗交易或托管划转则用 SI / ISI 指令，可灵活选择付款模式（DVP / FOP / RDP），详见下方说明。',
         emoji: emojiTypes.settle,
         actions: [
             { text: 'HKSCC发出最终净额结算指令（DvP）', type: 'sender', group: 'all' },
@@ -183,7 +183,66 @@ const phases = [
             { from: 'hkscc', to: 'seller-broker', emoji: '📋', label: '证券义务' },
             { from: 'buyer-broker', to: 'hkscc', emoji: '✅', label: '确认' },
             { from: 'seller-broker', to: 'hkscc', emoji: '✅', label: '确认' }
-        ]
+        ],
+        settlementInfo: {
+            instructionTypes: [
+                {
+                    code: 'CNS',
+                    name: '持续净额交收',
+                    modes: ['DVP'],
+                    hasCCP: true,
+                    description: '交易所标准成交，经HKSCC净额轧差后结算（本流程使用）',
+                    isCurrent: true,
+                },
+                {
+                    code: 'IT',
+                    name: '孤立交易',
+                    modes: ['DVP', 'FOP', 'RDP'],
+                    hasCCP: false,
+                    description: '从CNS剥离的单笔成交，不参与净额计算，点对点结算',
+                    isCurrent: false,
+                },
+                {
+                    code: 'SI',
+                    name: '结算指令',
+                    modes: ['DVP', 'FOP', 'RDP'],
+                    hasCCP: false,
+                    description: '参与者之间直接证券划转，无需经过交易所',
+                    isCurrent: false,
+                },
+                {
+                    code: 'ISI',
+                    name: '投资者结算指令',
+                    modes: ['DVP', 'RDP'],
+                    hasCCP: false,
+                    description: '涉及投资者参与者账户的划转，适用场景有限',
+                    isCurrent: false,
+                },
+            ],
+            paymentModes: [
+                {
+                    code: 'DVP',
+                    name: '券款对付',
+                    fullName: 'Delivery vs. Payment',
+                    description: '证券与资金在CCASS内同步交换，消除交收风险',
+                    isCurrentMode: true,
+                },
+                {
+                    code: 'FOP',
+                    name: '无需付款交割',
+                    fullName: 'Free of Payment',
+                    description: '证券在CCASS内划转，资金在CCASS体系外另行结算',
+                    isCurrentMode: false,
+                },
+                {
+                    code: 'RDP',
+                    name: '实时券款对付',
+                    fullName: 'Realtime DVP',
+                    description: '银行付款确认后即时完成证券划拨，适合大额交易',
+                    isCurrentMode: false,
+                },
+            ],
+        }
     },
     // ---- Phase 9: 资金交收 (Fund Settlement) ----
     {
